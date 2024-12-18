@@ -10,7 +10,20 @@
             justify-content: center;
             margin: 0;
             padding: 20px;
-            font-family: Arial, sans-serif;
+            font-family: 'Maven Pro', monospace;
+            background-color: #262626;
+            color: #eee;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1 {
+            color: #a7ffea; /* {{ edit_9 }} Title color */
+        }
+        a {
+            color: #a7ffea; /* {{ edit_10 }} Link color */
+            text-decoration: none; /* {{ edit_11 }} Remove underline from links */
+        }
+        a:hover {
+            text-decoration: underline; /* {{ edit_12 }} Underline on hover */
         }
         .container {
             max-width: 800px;
@@ -51,7 +64,7 @@
         There are 77 NFTs, indexed from nr.0 to nr.76, where nr.0 is in 77 editions (supply), nr.1 has 76 supply 
         and so on until last NFT nr.76 with supply of one. 
         Total supply is 3003, which is a palindrome and a pn4 number with factors of 3x7x11x13. 
-        <a href="pyramid.html">Visualization of asset supply</a>
+        <a href="pyramid.html">Supply Visualization</a>
     </p>
     <p>
         The clips were semi-randomly filmed during the progression of the bonfire with duration of about 10 +-3 seconds. 
@@ -67,8 +80,7 @@
         24 clips à 3 seconds<br>
     </p>
         <figure>
-            <img src="duration_in_seconds.png" alt="Duration in seconds chart">
-    <figcaption>Duration in seconds</figcaption>
+            <img src="duration_in_seconds.svg" alt="Duration in seconds chart">
 </figure>
     <p>
         Combining naturally occurring pseudo-randomness,(as I had no specific plan at the moment of filming or had any control of the flow of conversation) 
@@ -76,7 +88,11 @@
         I intend to shuffle the <strong>3003</strong> NFTs at <strong>1 Algo</strong> each.
     </p>
     <p>
-        Holders can combine <strong>3, 7, 11 or 13</strong> of clips together to receive a longer part of the whole as a new NFT from the creator. The parts used for creating a merged video will be burned. 
+        Holders can combine <strong>3, 7, 11 or 13</strong> of clips together to receive a longer part of the whole as a new NFT from the creator. The parts used for creating a merged video will be burned.
+    <p>
+        A merged video can only have supply of one, as it is minted by demand, and if a holder requests a range, say 3, 4 and 5 and it has already been minted by another holder, that range can no longer be merged as an asset. In that case the holder must present a different range, f.ex. 2,3,4 or 2,3,4,5,6.<br>
+        Holders are also competely free to burn any assets from the collection, as they are minted on a permissionless protocol, without freeze or clawback properties.
+    </p>
         Eventually, only one whole film can be made, since the last part of the whole exists in edition of one. The other pieces, combined or in their original form can become unique as well, depending on how many will be burned and their original supply.
     </p>
     <p>
@@ -86,7 +102,6 @@
     
         <figure>
             <img src="40.png" alt="Still image 40_midsommar.mp4">
-        <figcaption>Still image 40_midsommar.mp4</figcaption>
     </figure>
     </div>
 </body>
