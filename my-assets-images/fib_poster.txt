@@ -1,0 +1,1 @@
+ffmpeg -i "02_midsomar_thumb.jpg" -i "03_midsomar_thumb.jpg" -i "05_midsomar_thumb.jpg" -i "08_midsomar_thumb.jpg" -i "13_midsomar_thumb.jpg" -i "21_midsomar_thumb.jpg" -i "34_midsomar_thumb.jpg" -i "55_midsomar_thumb.jpg" -filter_complex "[0:v][1:v][2:v][3:v]xstack=inputs=4[top]; [4:v][5:v][6:v][7:v]xstack=inputs=4[bottom]; [top][bottom]vstack[v]" -map "[v]" final_grid.jpg

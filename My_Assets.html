@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My MIDSOMAR Assets</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14'>🔥</text></svg>">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Maven Pro', monospace;
+            background-color: #262626;
+            color: #eee;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .asset-card {
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .asset-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .asset-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            background-color: #262626;
+        }
+
+        .asset-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: rgba(51, 51, 51, 0.9);
+            color: #eee;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .asset-card:hover .asset-info {
+            opacity: 1;
+        }
+
+        .asset-name {
+            margin: 0;
+            font-size: 1em;
+        }
+
+        .asset-details {
+            margin-top: 4px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .nav-bar {
+            background-color: #333;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .nav-bar .container {
+            text-align: center;
+        }
+
+        .nav-bar a {
+            color: #a7ffea;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .nav-bar a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="container">
+            <a href="tracker.html">Back to Tracker</a>
+            <span style="margin: 0 10px;">•</span>
+            <a href="index.html">Main Page</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>My MIDSOMAR Assets</h1>
+        <div class="gallery" id="assetGallery">
+            <!-- Cards will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        function loadGallery() {
+            const gallery = document.getElementById('assetGallery');
+            const savedState = localStorage.getItem('trackerState');
+            
+            if (!savedState) {
+                gallery.innerHTML = '<p>No assets found. Visit the tracker to get started!</p>';
+                return;
+            }
+
+            const state = JSON.parse(savedState);
+            const myAssets = new Map(state.myAssets);
+
+            gallery.innerHTML = '';
+
+            // Convert to array and sort numerically
+            const sortedAssets = Array.from(myAssets.entries())
+                .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+
+            sortedAssets.forEach(([id, amount]) => {
+                if (amount > 0) {
+                    const card = document.createElement('div');
+                    card.className = 'asset-card';
+
+                    const formattedId = id.padStart(2, '0');
+                    const assetName = `MS ${formattedId}`;
+                    const imagePath = `my-assets-images/${formattedId}_midsomar_thumb.jpg`;
+
+                    const img = new Image();
+                    img.className = 'asset-image';
+                    img.alt = assetName;
+                    
+                    img.onerror = function() {
+                        this.src = 'my-assets-images/placeholder.jpg';
+                        this.onerror = null;
+                    };
+                    
+                    img.src = imagePath;
+
+                    const info = document.createElement('div');
+                    info.className = 'asset-info';
+                    info.innerHTML = `
+                        <h3 class="asset-name">${assetName}</h3>
+                        <div class="asset-details">
+                            Owned: ${amount}
+                        </div>
+                    `;
+
+                    card.appendChild(img);
+                    card.appendChild(info);
+                    gallery.appendChild(card);
+                }
+            });
+
+            if (gallery.children.length === 0) {
+                gallery.innerHTML = '<p>No assets found. Visit the tracker to get started!</p>';
+            }
+        }
+
+        // Remove any existing info elements at the bottom of the page
+        document.addEventListener('DOMContentLoaded', function() {
+            const bottomInfo = document.querySelector('body > .asset-info');
+            if (bottomInfo) {
+                bottomInfo.remove();
+            }
+        });
+
+        loadGallery();
+    </script>
+</body>
+</html> 

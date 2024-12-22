@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Supply Tracker</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14'>🔥</text></svg>">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Maven Pro', monospace;
+            background-color: #262626;
+            color: #eee;
+            transition: background-color 0.3s, color 0.3s;
+            padding-bottom: 150px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 6px 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #a7ffea;
+            font-weight: normal;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            width: auto;
+            position: relative;
+        }
+
+        th::after {
+            content: '';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        th.sort-asc::after {
+            content: '↑';
+        }
+
+        th.sort-desc::after {
+            content: '↓';
+        }
+
+        th:hover {
+            background-color: #444;
+        }
+
+        .input-section {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 800px;
+            background-color: #262626;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-section input {
+            background-color: #333;
+            border: 1px solid #444;
+            color: #eee;
+            padding: 8px;
+            font-family: 'Maven Pro', monospace;
+            font-size: 14px;
+            width: 60px;
+        }
+
+        .input-section .separator {
+            color: #eee;
+            margin: 0 4px;
+        }
+
+        .input-section button {
+            background-color: #333;
+            border: 1px solid #444;
+            color: #a7ffea;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'Maven Pro', monospace;
+            font-size: 14px;
+        }
+
+        .input-section button:hover {
+            background-color: #444;
+        }
+
+        .error {
+            color: #ff6b6b;
+            display: none;
+            font-size: 14px;
+        }
+
+        table th:nth-child(1) { width: 15%; }
+        table th:nth-child(2) { width: 15%; }
+        table th:nth-child(3) { width: 15%; }
+        table th:nth-child(4) { width: 15%; }
+        table th:nth-child(5) { width: 15%; }
+        table th:nth-child(6) { width: 12.5%; }
+        table th:nth-child(7) { width: 12.5%; }
+
+        table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .my-assets {
+            color: #ffa500;  /* Orange color for My Assets */
+        }
+        
+        .total-row {
+            position: sticky;
+            bottom: 80px;
+            background-color: #333;
+            font-weight: bold;
+            z-index: 999;
+        }
+
+        .input-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .rules {
+            margin-bottom: 30px;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .rules ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .rules li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .rules a {
+            color: #a7ffea;
+            text-decoration: none;
+        }
+
+        .rules a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="rules">
+            <p>
+                Welcome to your own MIDSOMAR manager! Here are the rules:
+                <ul>
+                    <li>Base assets (MS 00-76) can only be combined in groups of 1, 3, 7, 11, or 13 sequential numbers</li>
+                    <li>When assets are combined, they are burned and create a new asset named after their range (e.g., MS 0103 for combining MS 01 through MS 03)</li>
+                    <li>The "Simulate Shuffle" button randomly distributes assets</li>
+                    <li>Fill in Asset index and amount to burn</li>
+                    <li>Orange rows indicate assets you currently own</li>
+                    <li>The Range column shows what base assets were combined to create that asset</li>
+                    <li>The Factor column shows how many assets were combined (and their sub-factors in parentheses)</li>
+                </ul>
+                <p>
+                    <a href="index.html">Main Page</a>
+                    <span style="margin: 0 10px;">•</span>
+                    <a href="My_Assets.html">My MIDSOMAR Gallery</a>
+                </p>
+            </p>
+        </div>
+        <table id="assetTable">
+            <thead>
+                <tr>
+                    <th data-sort="name">Name</th>
+                    <th data-sort="myAssets">My Assets</th>
+                    <th data-sort="initialSupply">Initial Supply</th>
+                    <th data-sort="circulatingSupply">Circulating</th>
+                    <th data-sort="burnedSupply">Burned</th>
+                    <th data-sort="creationTime">Creation Time</th>
+                    <th data-sort="range">Range</th>
+                    <th data-sort="factor">Factor</th>
+                </tr>
+            </thead>
+            <tbody id="assetTableBody">
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td>Total</td>
+                    <td id="totalMyAssets">0</td>
+                    <td>3003</td>
+                    <td id="totalCirculating">3003</td>
+                    <td id="totalBurned">0</td>
+                    <td id="totalTime">0 min</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="input-section">
+            <div class="input-controls">
+                <div class="input-group">
+                    <input type="number" id="combineStart" placeholder="From" min="0" max="76">
+                    <span class="separator">-</span>
+                    <input type="number" id="combineEnd" placeholder="To" min="0" max="76">
+                    <button onclick="combineAssets()">Combine</button>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="burnAsset" placeholder="Asset name" min="0" oninput="checkBurnAssetInput()">
+                    <input type="number" id="burnAmount" placeholder="Amount" min="1">
+                    <button onclick="burnAssets()">Burn</button>
+                </div>
+                <button onclick="shuffleAssets()">Simulate Shuffle</button>
+                <div id="error" class="error" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AssetTracker {
+            constructor() {
+                this.assets = new Map();
+                this.validFactors = [1, 3, 7, 11, 13];
+                this.sortColumn = 'name';
+                this.sortAscending = true;
+                this.myAssets = new Map();
+                this.isShuffled = false;
+                this.initializeAssets();
+                this.initializeSorting();
+                this.loadState();
+            }
+
+            initializeAssets() {
+                for (let i = 0; i < 77; i++) {
+                    const assetName = i < 10 ? `0${i}` : `${i}`; // Format to two digits
+                    this.assets.set(i.toString(), {
+                        name: `MS ${assetName}`,
+                        initialSupply: 77 - i,
+                        circulatingSupply: 77 - i,
+                        burnedSupply: 0,
+                        creationTime: new Date().toISOString()
+                    });
+                }
+            }
+
+            initializeSorting() {
+                const headers = document.querySelectorAll('#assetTable th');
+                headers.forEach(header => {
+                    header.addEventListener('click', () => {
+                        const column = header.dataset.sort;
+                        if (this.sortColumn === column) {
+                            this.sortAscending = !this.sortAscending;
+                        } else {
+                            this.sortColumn = column;
+                            this.sortAscending = true;
+                        }
+
+                        // Remove existing sort classes
+                        headers.forEach(h => {
+                            h.classList.remove('sort-asc', 'sort-desc');
+                        });
+                        
+                        // Add appropriate sort class
+                        header.classList.add(this.sortAscending ? 'sort-asc' : 'sort-desc');
+                        
+                        this.updateTable();
+                    });
+                });
+            }
+
+            validateRange(range) {
+                const numbers = range.split(',').map(n => parseInt(n.trim()));
+                
+                // Check if numbers are sequential
+                for (let i = 1; i < numbers.length; i++) {
+                    if (numbers[i] !== numbers[i-1] + 1) {
+                        throw new Error('Range must be sequential');
+                    }
+                }
+
+                // Check if length is a valid factor
+                if (!this.validFactors.includes(numbers.length)) {
+                    throw new Error('Number of assets must be one of: 1, 3, 7, 11, 13');
+                }
+
+                // Check if all assets exist and have supply
+                for (const num of numbers) {
+                    const asset = this.assets.get(num.toString());
+                    if (!asset || asset.circulatingSupply === 0) {
+                        throw new Error(`Asset ${num} is not available`);
+                    }
+                }
+
+                // Check if combined index already exists
+                const newIndex = `${numbers[0]}${numbers[numbers.length-1]}`;
+                if (this.assets.has(newIndex)) {
+                    throw new Error('This combination already exists');
+                }
+
+                return {
+                    numbers,
+                    factor: numbers.length
+                };
+            }
+
+            combineAssets(range) {
+                const { numbers, factor } = this.validateRange(range);
+                const newIndex = `${numbers[0] < 10 ? '0' : ''}${numbers[0]}${numbers[numbers.length - 1] < 10 ? '0' : ''}${numbers[numbers.length - 1]}`;
+
+                // Get factors from any combined assets in the range
+                const subFactors = numbers.map(num => {
+                    const asset = this.assets.get(num.toString());
+                    return asset.factor || '';
+                }).filter(f => f).join(',');
+
+                const factors = factor !== 'none' ? (subFactors ? `${factor}(${subFactors})` : factor.toString()) : 'none';
+
+                // Burn original assets and update myAssets
+                numbers.forEach(num => {
+                    const asset = this.assets.get(num.toString());
+                    asset.circulatingSupply--;
+                    asset.burnedSupply++;
+                    
+                    // If user owned any of the burned assets, decrease their count
+                    const myAssetAmount = this.myAssets.get(num.toString()) || 0;
+                    if (myAssetAmount > 0) {
+                        if (myAssetAmount === 1) {
+                            this.myAssets.delete(num.toString());
+                        } else {
+                            this.myAssets.set(num.toString(), myAssetAmount - 1);
+                        }
+                    }
+                });
+
+                // Create new asset with combined initial supply
+                this.assets.set(newIndex, {
+                    name: `MS ${newIndex}`,
+                    initialSupply: 1,
+                    circulatingSupply: 1,
+                    burnedSupply: 0,
+                    creationTime: new Date().toISOString(),
+                    range: `${numbers[0]}-${numbers[numbers.length-1]}`,
+                    factor: factors
+                });
+
+                // Add the new asset to user's assets
+                this.myAssets.set(newIndex, 1);
+
+                this.saveState();
+                this.updateTable();
+            }
+
+            burnAssets(range) {
+                const numbers = range.split(',').map(n => parseInt(n.trim()));
+                
+                numbers.forEach(num => {
+                    const asset = this.assets.get(num.toString());
+                    if (asset && asset.circulatingSupply > 0) {
+                        asset.circulatingSupply--;
+                        asset.burnedSupply++;
+                        // Update user's assets
+                        const myAssetAmount = this.myAssets.get(num.toString()) || 0;
+                        if (myAssetAmount > 0) {
+                            this.myAssets.set(num.toString(), myAssetAmount - 1);
+                        }
+                    }
+                });
+
+                this.updateTable(); // Ensure the table updates after burning
+            }
+
+            formatDateTime(isoString) {
+                const date = new Date(isoString);
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                
+                return `${hours}:${minutes} ${day}.${month}.${year}`;
+            }
+
+            shuffleAssets() {
+                // Reset previous assets
+                this.myAssets.clear();
+                
+                if (this.isShuffled) {
+                    this.isShuffled = false;
+                    document.querySelector('button[onclick="shuffleAssets()"]').textContent = 'Simulate Shuffle';
+                    localStorage.removeItem('trackerState');
+                    
+                    // Reset to initial state
+                    this.assets.clear();
+                    this.initializeAssets();
+                    
+                    this.updateTable();
+                    return;
+                }
+
+                // Step 1: Get at least 17 random assets from the range 0-76
+                const availableAssets = Array.from(this.assets.entries())
+                    .filter(([id, asset]) => {
+                        const assetNum = parseInt(id);
+                        return assetNum >= 0 && assetNum <= 76 && asset.circulatingSupply > 0;
+                    });
+                
+                // Ensure we select at least 17 assets, but no more than available
+                const minAssets = Math.min(17, availableAssets.length);
+                const selectedAssets = availableAssets
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, Math.max(minAssets, Math.floor(Math.random() * availableAssets.length)));
+
+                // Step 2: Distribute random amounts to each selected asset
+                selectedAssets.forEach(([id, asset]) => {
+                    const amount = Math.floor(Math.random() * asset.circulatingSupply) + 1;
+                    this.myAssets.set(id, amount);
+                });
+
+                this.isShuffled = true;
+                document.querySelector('button[onclick="shuffleAssets()"]').textContent = 'Reset';
+                this.saveState();
+                this.updateTable();
+            }
+
+            updateTable() {
+                const tbody = document.getElementById('assetTableBody');
+                tbody.innerHTML = '';
+
+                // Convert Map to array for sorting
+                let assets = Array.from(this.assets.entries())
+                    .map(([id, asset]) => ({ id, ...asset }))
+                    .filter(asset => asset.initialSupply > 0);
+
+                // Sort assets based on the current sort column and order
+                assets.sort((a, b) => {
+                    let aValue, bValue;
+
+                    if (this.sortColumn === 'name') {
+                        aValue = a.name;
+                        bValue = b.name;
+                        return this.sortAscending ? 
+                            aValue.localeCompare(bValue) : 
+                            bValue.localeCompare(aValue);
+                    } else if (this.sortColumn === 'myAssets') {
+                        aValue = this.myAssets.get(a.id) || 0;
+                        bValue = this.myAssets.get(b.id) || 0;
+                    } else if (this.sortColumn === 'creationTime') {
+                        aValue = new Date(a.creationTime);
+                        bValue = new Date(b.creationTime);
+                    } else {
+                        aValue = parseFloat(a[this.sortColumn]) || 0;
+                        bValue = parseFloat(b[this.sortColumn]) || 0;
+                    }
+
+                    return this.sortAscending ? aValue - bValue : bValue - aValue;
+                });
+
+                // Calculate total range coverage
+                let coveredPositions = new Set();
+                
+                assets.forEach(asset => {
+                    if (asset.range) {
+                        const [start, end] = asset.range.split('-').map(Number);
+                        for (let i = start; i <= end; i++) {
+                            coveredPositions.add(i);
+                        }
+                    }
+                });
+
+                let rangeCoverage = '';
+                if (coveredPositions.size > 0) {
+                    const coverage = (coveredPositions.size / 77 * 100).toFixed(1);
+                    rangeCoverage = `${coverage}%`;
+                }
+
+                // Update totals in the fixed bottom row
+                const totalRow = document.querySelector('.total-row');
+                if (totalRow) {
+                    totalRow.cells[6].textContent = rangeCoverage; // Update Range cell
+                }
+
+                // Initialize totals
+                let totals = {
+                    myAssets: 0,
+                    circulatingSupply: 0,
+                    burnedSupply: 0,
+                };
+
+                // Update table with sorted data
+                assets.forEach(asset => {
+                    const row = tbody.insertRow();
+                    const myAssetAmount = this.myAssets.get(asset.id) || 0;
+
+                    // If the user has the asset, color the Name and My Assets cells
+                    if (myAssetAmount > 0) {
+                        row.classList.add('my-assets');
+                    } else {
+                        row.classList.remove('my-assets'); // Ensure class is removed if no assets
+                    }
+
+                    // Create cells
+                    const nameCell = row.insertCell(0);
+                    nameCell.textContent = asset.name;
+                    
+                    const myAssetsCell = row.insertCell(1);
+                    myAssetsCell.textContent = myAssetAmount;
+
+                    row.insertCell(2).textContent = asset.initialSupply;
+                    row.insertCell(3).textContent = asset.circulatingSupply;
+                    row.insertCell(4).textContent = asset.burnedSupply; // Ensure this is updated
+                    row.insertCell(5).textContent = this.formatDateTime(asset.creationTime);
+                    row.insertCell(6).textContent = asset.range || '';
+                    row.insertCell(7).textContent = asset.factor || '';
+
+                    // Update totals
+                    totals.myAssets += myAssetAmount;
+                    totals.circulatingSupply += asset.circulatingSupply;
+                    totals.burnedSupply += asset.burnedSupply;
+                });
+
+                // Update the total row with the correct values
+                totalRow.cells[1].textContent = totals.myAssets;
+                totalRow.cells[2].textContent = totals.circulatingSupply;
+                totalRow.cells[4].textContent = totals.burnedSupply; // Ensure burned assets are summed
+            }
+
+            saveState() {
+                const state = {
+                    myAssets: Array.from(this.myAssets.entries()),
+                    isShuffled: this.isShuffled
+                };
+                localStorage.setItem('trackerState', JSON.stringify(state));
+            }
+
+            loadState() {
+                const savedState = localStorage.getItem('trackerState');
+                if (savedState) {
+                    const state = JSON.parse(savedState);
+                    this.myAssets = new Map(state.myAssets);
+                    this.isShuffled = state.isShuffled;
+                    
+                    // Update shuffle button text based on loaded state
+                    const shuffleButton = document.querySelector('button[onclick="shuffleAssets()"]');
+                    if (shuffleButton) {
+                        shuffleButton.textContent = this.isShuffled ? 'Reset' : 'Simulate Shuffle';
+                    }
+                    
+                    this.updateTable();
+                }
+            }
+        }
+
+        const tracker = new AssetTracker();
+        tracker.updateTable();
+
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = message;
+            error.style.display = 'block';
+            setTimeout(() => {
+                error.style.display = 'none';
+            }, 3000);
+        }
+
+        function combineAssets() {
+            const start = document.getElementById('combineStart').value;
+            const end = document.getElementById('combineEnd').value;
+            if (!start || !end) {
+                showError('Please enter both start and end values');
+                return;
+            }
+            
+            const range = [];
+            for (let i = parseInt(start); i <= parseInt(end); i++) {
+                range.push(i);
+            }
+            
+            try {
+                tracker.combineAssets(range.join(','));
+                document.getElementById('combineStart').value = '';
+                document.getElementById('combineEnd').value = '';
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function burnAssets() {
+            const asset = document.getElementById('burnAsset').value;
+            const amount = document.getElementById('burnAmount').value;
+            if (!asset || !amount) {
+                showError('Please enter both asset name and amount');
+                return;
+            }
+
+            try {
+                // Repeat the asset number 'amount' times in the range
+                const range = Array(parseInt(amount)).fill(asset).join(',');
+                tracker.burnAssets(range);
+                document.getElementById('burnAsset').value = '';
+                document.getElementById('burnAmount').value = '';
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function shuffleAssets() {
+            tracker.shuffleAssets();
+        }
+
+        function checkBurnAssetInput() {
+            const burnAssetInput = document.getElementById('burnAsset');
+            const errorDiv = document.getElementById('error');
+
+            if (burnAssetInput.value.length === 1) {
+                errorDiv.textContent = "Use two digits, you are the captain now";
+                errorDiv.style.display = 'block';
+            } else {
+                errorDiv.style.display = 'none'; // Hide error if input is valid
+            }
+
+            if (burnAssetInput.value.length >= 2) {
+                document.getElementById('burnAmount').focus();
+            }
+        }
+
+        let currentSortColumn = 'name'; // Default sort column
+        let sortAscending = true; // Default sort order
+
+        function sortTable(column) {
+            if (currentSortColumn === column) {
+                sortAscending = !sortAscending;
+            } else {
+                currentSortColumn = column;
+                sortAscending = true;
+            }
+            updateTable();
+        }
+
+        function updateTable() {
+            const tbody = document.getElementById('assetTableBody');
+            tbody.innerHTML = '';
+
+            let assets = Array.from(this.assets.entries())
+                .map(([id, asset]) => ({ id, ...asset }))
+                .filter(asset => asset.initialSupply > 0);
+
+            assets.sort((a, b) => {
+                let aValue, bValue;
+
+                if (currentSortColumn === 'creationTime') {
+                    aValue = new Date(a.creationTime);
+                    bValue = new Date(b.creationTime);
+                } else {
+                    aValue = parseFloat(a[currentSortColumn]) || 0;
+                    bValue = parseFloat(b[currentSortColumn]) || 0;
+                }
+
+                return sortAscending ? aValue - bValue : bValue - aValue;
+            });
+
+            let coveredPositions = new Set();
+            
+            assets.forEach(asset => {
+                if (asset.range) {
+                    const [start, end] = asset.range.split('-').map(Number);
+                    for (let i = start; i <= end; i++) {
+                        coveredPositions.add(i);
+                    }
+                }
+            });
+
+            let rangeCoverage = '';
+            if (coveredPositions.size > 0) {
+                const coverage = (coveredPositions.size / 77 * 100).toFixed(1);
+                rangeCoverage = `${coverage}%`;
+            }
+
+            const totalRow = document.querySelector('.total-row');
+            if (totalRow) {
+                totalRow.cells[6].textContent = rangeCoverage;
+            }
+
+            let totals = {
+                myAssets: 0,
+                circulatingSupply: 0,
+                burnedSupply: 0,
+            };
+
+            assets.forEach(asset => {
+                const row = tbody.insertRow();
+                const myAssetAmount = this.myAssets.get(asset.id) || 0;
+
+                if (myAssetAmount > 0) {
+                    row.classList.add('my-assets');
+                } else {
+                    row.classList.remove('my-assets');
+                }
+
+                const nameCell = row.insertCell(0);
+                nameCell.textContent = asset.name;
+                
+                const myAssetsCell = row.insertCell(1);
+                myAssetsCell.textContent = myAssetAmount;
+
+                row.insertCell(2).textContent = asset.initialSupply;
+                row.insertCell(3).textContent = asset.circulatingSupply;
+                row.insertCell(4).textContent = asset.burnedSupply;
+                row.insertCell(5).textContent = this.formatDateTime(asset.creationTime);
+                row.insertCell(6).textContent = asset.range || '';
+                row.insertCell(7).textContent = asset.factor || '';
+
+                totals.myAssets += myAssetAmount;
+                totals.circulatingSupply += asset.circulatingSupply;
+                totals.burnedSupply += asset.burnedSupply;
+            });
+
+            totalRow.cells[1].textContent = totals.myAssets;
+            totalRow.cells[2].textContent = totals.circulatingSupply;
+            totalRow.cells[4].textContent = totals.burnedSupply;
+        }
+    </script>
+</body>
+</html>
