@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asset Supply Tracker</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14'>🔥</text></svg>">
+    <title>Asset Manager</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14'>☀️</text></svg>">
     <style>
         body {
             display: flex;
@@ -192,7 +192,7 @@
             <p>
                 Welcome to your own MIDSOMAR manager! Here are the rules:
                 <ul>
-                    <li>NOTE: Combining merged assets is not possible atm</li>
+                    <li>NOTE: Combining combined assets is not possible atm</li>
                     <li>Base assets (MS 00-76) can only be combined in groups of 1, 3, 7, 11, or 13 sequential numbers</li>
                     <li>When assets are combined, they are burned and create a new asset named after their range (e.g., MS 0103 for combining MS 01 through MS 03)</li>
                     <li>The "Simulate Shuffle" button randomly distributes assets</li>
@@ -203,9 +203,13 @@
                     <li>The Factor column shows how many assets were combined (and their sub-factors in parentheses)</li>
                 </ul>
                 <p>
-                    <a href="index.html">Main Page</a>
+                    <a href="index.html">Main page</a>
                     <span style="margin: 0 10px;">•</span>
-                    <a href="My_Assets.html">My MIDSOMAR Gallery</a>
+                    <a href="My_Assets.html">My assets</a>
+                    <span style="margin: 0 10px;">•</span>
+                    <a href="prize-distribution.html">Prize calculator</a>
+                    <span style="margin: 0 10px;">•</span>
+                    <a href="pyramid.html">Pyramid</a>
                 </p>
             </p>
         </div>
@@ -332,8 +336,16 @@
                     }
                 }
 
+                // Create properly padded index for checking existence
+                const paddedStart = numbers[0].toString().padStart(2, '0');
+                const paddedEnd = numbers[numbers.length-1].toString().padStart(2, '0');
+                const newIndex = `${paddedStart}${paddedEnd}`;
+
+                // Debug log
+                console.log('Checking for existing combination:', newIndex);
+                console.log('Existing assets:', Array.from(this.assets.keys()));
+
                 // Check if combined index already exists
-                const newIndex = `${numbers[0]}${numbers[numbers.length-1]}`;
                 if (this.assets.has(newIndex)) {
                     throw new Error('This combination already exists');
                 }
@@ -346,7 +358,14 @@
 
             combineAssets(range) {
                 const { numbers, factor } = this.validateRange(range);
-                const newIndex = `${numbers[0] < 10 ? '0' : ''}${numbers[0]}${numbers[numbers.length - 1] < 10 ? '0' : ''}${numbers[numbers.length - 1]}`;
+                
+                // Ensure consistent padding for new asset index
+                const paddedStart = numbers[0].toString().padStart(2, '0');
+                const paddedEnd = numbers[numbers.length-1].toString().padStart(2, '0');
+                const newIndex = `${paddedStart}${paddedEnd}`;
+
+                // Debug log
+                console.log('Creating new combination:', newIndex);
 
                 // Get factors from any combined assets in the range
                 const subFactors = numbers.map(num => {
@@ -362,7 +381,6 @@
                     asset.circulatingSupply--;
                     asset.burnedSupply++;
                     
-                    // If user owned any of the burned assets, decrease their count
                     const myAssetAmount = this.myAssets.get(num.toString()) || 0;
                     if (myAssetAmount > 0) {
                         if (myAssetAmount === 1) {
@@ -380,13 +398,14 @@
                     circulatingSupply: 1,
                     burnedSupply: 0,
                     creationTime: new Date().toISOString(),
-                    range: `${numbers[0]}-${numbers[numbers.length-1]}`,
+                    range: `${paddedStart}-${paddedEnd}`,
                     factor: factors
                 });
 
                 // Add the new asset to user's assets
                 this.myAssets.set(newIndex, 1);
 
+                // Save state after combining
                 this.saveState();
                 this.updateTable();
             }
@@ -399,7 +418,6 @@
                     if (asset && asset.circulatingSupply > 0) {
                         asset.circulatingSupply--;
                         asset.burnedSupply++;
-                        // Update user's assets
                         const myAssetAmount = this.myAssets.get(num.toString()) || 0;
                         if (myAssetAmount > 0) {
                             this.myAssets.set(num.toString(), myAssetAmount - 1);
@@ -407,7 +425,9 @@
                     }
                 });
 
-                this.updateTable(); // Ensure the table updates after burning
+                // Save state after burning
+                this.saveState();
+                this.updateTable();
             }
 
             formatDateTime(isoString) {
@@ -568,7 +588,8 @@
             saveState() {
                 const state = {
                     myAssets: Array.from(this.myAssets.entries()),
-                    isShuffled: this.isShuffled
+                    isShuffled: this.isShuffled,
+                    assets: Array.from(this.assets.entries()) // Save the entire assets state
                 };
                 localStorage.setItem('trackerState', JSON.stringify(state));
             }
@@ -579,6 +600,11 @@
                     const state = JSON.parse(savedState);
                     this.myAssets = new Map(state.myAssets);
                     this.isShuffled = state.isShuffled;
+                    
+                    // Restore assets state if it exists
+                    if (state.assets) {
+                        this.assets = new Map(state.assets);
+                    }
                     
                     // Update shuffle button text based on loaded state
                     const shuffleButton = document.querySelector('button[onclick="shuffleAssets()"]');

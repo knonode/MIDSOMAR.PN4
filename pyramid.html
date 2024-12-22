@@ -14,6 +14,29 @@
             color: #a7ffea;
             transition: background-color 0.3s, color 0.3s;
         }
+
+        .nav-links {
+            margin-top: 30px;
+            font-family: 'Maven Pro', monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            letter-spacing: normal;
+            word-spacing: normal;
+        }
+
+        .nav-links a {
+            color: #a7ffea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-links span {
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -21,15 +44,62 @@
 
     <script>
         function generatePyramid(totalItems) {
+            // First, let's get the burned assets data from localStorage
+            const trackerState = JSON.parse(localStorage.getItem('trackerState'));
+            const burnedAssets = [];
+            
+            if (trackerState && trackerState.assets) {
+                const assets = new Map(trackerState.assets);
+                
+                // Loop through assets to check burned assets only
+                assets.forEach((asset, id) => {
+                    // Only check the burnedSupply column
+                    if (asset.burnedSupply > 0) {
+                        burnedAssets.push([parseInt(id), asset.burnedSupply]);
+                        console.log(`Asset ${id} has ${asset.burnedSupply} burned`);
+                    }
+                });
+            }
+
+            // Debug log to check burned assets
+            console.log('Burned assets:', burnedAssets);
+
             const pyramid = [];
             let itemsUsed = 0;
-            let currentNumber = 0;
+            let currentNumber = 76;
 
-            while (itemsUsed < totalItems) {
-                const rowNumbers = Array(77 - currentNumber).fill(currentNumber);
-                pyramid.push(rowNumbers.map(n => n.toString().padStart(2, '0')));
-                itemsUsed += rowNumbers.length;
-                currentNumber++;
+            // Create a map of burned assets with their counts
+            const burnedMap = new Map();
+            burnedAssets.forEach(([assetNum, count]) => {
+                burnedMap.set(assetNum, count);
+            });
+
+            // Debug log to check burned map
+            console.log('Burned map:', Array.from(burnedMap.entries()));
+
+            while (itemsUsed < totalItems && currentNumber >= 0) {
+                const rowLength = 77 - currentNumber;
+                let rowNumbers = Array(rowLength).fill(currentNumber);
+                
+                // If this asset has been burned, replace exact number of positions with '  '
+                const burnedCount = burnedMap.get(currentNumber) || 0;
+                if (burnedCount > 0) {
+                    const actualBurnCount = Math.min(burnedCount, rowLength);
+                    const positions = Array.from({length: rowLength}, (_, i) => i)
+                        .sort(() => Math.random() - 0.5)
+                        .slice(0, actualBurnCount);
+                    
+                    positions.forEach(pos => {
+                        rowNumbers[pos] = '  ';
+                    });
+                }
+
+                // Format the numbers
+                rowNumbers = rowNumbers.map(n => n === '  ' ? n : n.toString().padStart(2, '0'));
+                
+                pyramid.push(rowNumbers);
+                itemsUsed += rowLength;
+                currentNumber--;
             }
 
             return pyramid;
@@ -37,15 +107,64 @@
 
         function renderPyramid(pyramid) {
             const pyramidElement = document.getElementById('pyramid');
-            pyramid.forEach(row => {
+            pyramidElement.innerHTML = '';
+            
+            // Define base flame colors from bottom to top
+            const flameColors = [
+                ['#ff0000', '#ff1111', '#ff2222'],      // Red variations (base)
+                ['#ff4500', '#ff3300', '#ff2200'],      // Red-orange variations
+                ['#ffa500', '#ff9834', '#ff8b17'],      // Orange variations
+                ['#ffd700', '#ffed4a', '#fff44f'],      // Gold variations
+                ['#ffffd0', '#fff7e6', '#fffff0']       // Very light yellow/white variations (tip)
+            ];
+            
+            const totalRows = pyramid.length;
+            
+            pyramid.forEach((row, rowIndex) => {
                 const rowElement = document.createElement('div');
-                rowElement.textContent = row.join(' ');
+                
+                // Calculate color zone from bottom to top
+                const zoneIndex = Math.floor(((totalRows - rowIndex - 1) / totalRows) * flameColors.length);
+                
+                rowElement.innerHTML = row.map(item => {
+                    if (item === '  ') {
+                        return '<span style="color: #666; opacity: 0.5;">..</span>';
+                    } else {
+                        const colorSet = flameColors[zoneIndex];
+                        const randomColor = colorSet[Math.floor(Math.random() * colorSet.length)];
+                        
+                        if (Math.random() < 0.2 && zoneIndex < flameColors.length - 1) {
+                            const upperColorSet = flameColors[zoneIndex + 1];
+                            const blendColor = upperColorSet[Math.floor(Math.random() * upperColorSet.length)];
+                            return `<span style="color: ${blendColor};">${item}</span>`;
+                        }
+                        
+                        return `<span style="color: ${randomColor};">${item}</span>`;
+                    }
+                }).join(' ');
+                
                 pyramidElement.appendChild(rowElement);
             });
         }
 
-        const pyramid = generatePyramid(3003);
+        // Example usage:
+        const burnedAssets = [
+            [4, 6],  // 6 of asset 04 are burned
+            [2, 3],  // 3 of asset 02 are burned
+            // Add more burned assets as needed
+        ];
+
+        const pyramid = generatePyramid(3003, burnedAssets);
         renderPyramid(pyramid);
     </script>
+    <p class="nav-links">
+        <a href="index.html">Main page</a>
+        <span style="margin: 0 10px;">•</span>
+        <a href="My_Assets.html">My assets</a>
+        <span style="margin: 0 10px;">•</span>
+        <a href="prize-distribution.html">Prize calculator</a>
+        <span style="margin: 0 10px;">•</span>
+        <a href="tracker.html">Asset manager</a>
+    </p>
 </body>
 </html>
