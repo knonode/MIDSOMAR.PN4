@@ -128,13 +128,12 @@
             font-size: 14px;
         }
 
-        table th:nth-child(1) { width: 15%; }
-        table th:nth-child(2) { width: 15%; }
-        table th:nth-child(3) { width: 15%; }
-        table th:nth-child(4) { width: 15%; }
-        table th:nth-child(5) { width: 15%; }
-        table th:nth-child(6) { width: 12.5%; }
-        table th:nth-child(7) { width: 12.5%; }
+        table th:nth-child(1) { width: 20%; }  /* Name */
+        table th:nth-child(2) { width: 15%; }  /* My Assets */
+        table th:nth-child(3) { width: 15%; }  /* Minted */
+        table th:nth-child(4) { width: 15%; }  /* Circ. */
+        table th:nth-child(5) { width: 15%; }  /* Burned */
+        table th:nth-child(6) { width: 20%; }  /* Created */
 
         table td {
             white-space: nowrap;
@@ -484,13 +483,11 @@
             <thead>
                 <tr>
                     <th data-sort="name">Name</th>
+                    <th data-sort="factor">Factor</th>
                     <th data-sort="myAssets">My Assets</th>
-                    <th data-sort="initialSupply">Minted</th>
                     <th data-sort="circulatingSupply">Circ.</th>
                     <th data-sort="burnedSupply">Burned</th>
                     <th data-sort="creationTime">Created</th>
-                    <th data-sort="range">Range</th>
-                    <th data-sort="factor">Factor</th>
                 </tr>
             </thead>
             <tbody id="combinedAssetsTableBody">
@@ -507,8 +504,6 @@
                     <th data-sort="circulatingSupply">Circ.</th>
                     <th data-sort="burnedSupply">Burned</th>
                     <th data-sort="creationTime">Created</th>
-                    <th data-sort="range">Range</th>
-                    <th data-sort="factor">Factor</th>
                 </tr>
             </thead>
             <tbody id="assetTableBody">
@@ -851,29 +846,34 @@
 
                     if (myAssetAmount > 0) {
                         row.classList.add('my-assets');
-                    } else {
-                        row.classList.remove('my-assets');
                     }
 
-                    // Create cells
-                    const nameCell = row.insertCell(0);
-                    nameCell.textContent = asset.name;
-                    
-                    const myAssetsCell = row.insertCell(1);
-                    myAssetsCell.textContent = myAssetAmount;
-
-                    row.insertCell(2).textContent = asset.initialSupply;
-                    row.insertCell(3).textContent = asset.circulatingSupply;
-                    row.insertCell(4).textContent = asset.burnedSupply;
-                    row.insertCell(5).textContent = this.formatDateTime(asset.creationTime);
-                    row.insertCell(6).textContent = asset.range || '';
-                    row.insertCell(7).textContent = asset.factor || '';
-
-                    // Add to the appropriate table
                     if (asset.range) {
-                        combinedTbody.appendChild(row); // Add to combined assets table
+                        // For combined assets table
+                        const nameCell = row.insertCell(0);
+                        nameCell.textContent = asset.name;
+                        
+                        row.insertCell(1).textContent = asset.factor || '';  // Factor moved next to Name
+                        row.insertCell(2).textContent = myAssetAmount;
+                        row.insertCell(3).textContent = asset.circulatingSupply;
+                        row.insertCell(4).textContent = asset.burnedSupply;
+                        row.insertCell(5).textContent = this.formatDateTime(asset.creationTime);
+                        
+                        combinedTbody.appendChild(row);
                     } else {
-                        assetTbody.appendChild(row); // Add to existing assets table
+                        // Create cells (removed range and factor)
+                        const nameCell = row.insertCell(0);
+                        nameCell.textContent = asset.name;
+                        
+                        const myAssetsCell = row.insertCell(1);
+                        myAssetsCell.textContent = myAssetAmount;
+
+                        row.insertCell(2).textContent = asset.initialSupply;
+                        row.insertCell(3).textContent = asset.circulatingSupply;
+                        row.insertCell(4).textContent = asset.burnedSupply;
+                        row.insertCell(5).textContent = this.formatDateTime(asset.creationTime);
+                        
+                        assetTbody.appendChild(row);
                     }
                 });
             }
