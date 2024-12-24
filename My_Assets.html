@@ -72,27 +72,25 @@
             font-size: 0.9em;
             opacity: 0.8;
         }
-
-        .nav-bar {
-            background-color: #333;
-            padding: 10px 0;
-            margin-bottom: 20px;
-        }
-
-        .nav-bar .container {
+        .nav-links {
             text-align: center;
+            margin: 20px 0;
         }
 
-        .nav-bar a {
-            color: #a7ffea;
+        .nav-links a {
+            color: #a7ffea;  /* Cyan color to match other pages */
             text-decoration: none;
-            margin-right: 20px;
+            margin: 0 10px;
         }
 
-        .nav-bar a:hover {
+        .nav-links a:hover {
             text-decoration: underline;
         }
 
+        .nav-links span {
+            color: #666;  /* Bullet point color */
+            margin: 0 5px;
+        }
         .video-modal {
             display: none;
             position: fixed;
@@ -127,16 +125,14 @@
     </style>
 </head>
 <body>
-    <div class="nav-bar">
-        <div class="container">
-            <a href="tracker.html">Asset manager</a>
-            <span style="margin: 0 10px;">•</span>
-            <a href="index.html">Main page</a>
-            <span style="margin: 0 10px;">•</span>
-            <a href="prize-distribution.html">Prize calculator</a>
-            <span style="margin: 0 10px;">•</span>
-            <a href="pyramid.html">Pyramid</a>           
-        </div>
+    <div class="nav-links">
+        <a href="index.html">Pyramid</a>
+        <span>•</span>
+        <a href="about.html">About</a>
+        <span>•</span>
+        <a href="tracker.html">Asset manager</a>
+        <span>•</span>
+        <a href="prize-distribution.html">Prize calculator</a>
     </div>
 
     <div class="container">
@@ -202,7 +198,7 @@
                 const savedState = localStorage.getItem('trackerState');
                 
                 if (!savedState) {
-                    gallery.innerHTML = '<p>No assets found. Visit the tracker to get started!</p>';
+                    gallery.innerHTML = '<p>No assets found. Visit the Asset manager to get started!</p>';
                     return;
                 }
 

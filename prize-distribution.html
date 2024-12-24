@@ -134,18 +134,118 @@
             margin-left: 10px;
             display: inline-block;
         }
+
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin: 10px 0;
+            }
+
+            input {
+                padding: 8px;
+                margin: 5px 0;
+                width: 180px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 8px;
+                margin: 5px 0;
+                width: 180px;
+                font-size: 14px;
+            }
+
+            table {
+                min-width: 200px;
+                margin: 10px auto;
+            }
+
+            th, td {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+
+            .formula {
+                font-size: 1em;
+                margin: 10px 0;
+            }
+
+            .vault-value {
+                font-size: 1em;
+            }
+
+            .prize-value {
+                font-size: 1.2em;
+            }
+
+            .nav-links {
+                margin: 10px 0;
+            }
+
+            .nav-links a {
+                font-size: 14px;
+                margin: 0 5px;
+            }
+
+            .error-message {
+                font-size: 12px;
+                margin-left: 5px;
+            }
+
+            p {
+                font-size: 14px;
+                margin: 8px auto;
+            }
+
+            h3 {
+                font-size: 16px;
+                margin: 10px 0;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                padding: 8px;
+            }
+
+            input, button {
+                width: 160px;
+                font-size: 12px;
+            }
+
+            table {
+                min-width: 180px;
+            }
+
+            th, td {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <div class="nav-links">
-        <a href="index.html">Main page</a>
+        <a href="index.html">Pyramid</a>
+        <span>•</span>
+        <a href="about.html">About</a>
         <span>•</span>
         <a href="tracker.html">Asset manager</a>
         <span>•</span>
         <a href="My_Assets.html">My Assets</a>
-        <span>•</span>
-        <a href="pyramid.html">Pyramid</a>
     </div>
     <div class="container">
         <h1>Prize Distribution Calculator</h1>

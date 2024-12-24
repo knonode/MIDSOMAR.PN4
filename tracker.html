@@ -22,7 +22,8 @@
             max-width: 800px;
             width: 100%;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 20px;
+            padding-bottom: 200px;
         }
 
         table {
@@ -71,18 +72,19 @@
 
         .input-section {
             position: fixed;
-            bottom: 0;
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100%;
+            width: 90%;
             max-width: 800px;
-            background-color: #262626;
-            padding: 15px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+            background-color: #222;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 8px;
         }
 
         .input-group {
@@ -184,62 +186,333 @@
         .rules a:hover {
             text-decoration: underline;
         }
+
+        .nav-links {
+            text-align: center;
+            margin: 10px 0;  /* Reduced from 20px */
+        }
+
+        .nav-links a {
+            color: #a7ffea;
+            text-decoration: none;
+            margin: 0 5px;  /* Reduced from 10px */
+            font-size: 14px;  /* Slightly smaller font */
+            display: inline-block;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-links span {
+            color: #666;
+            margin: 0 2px;  /* Reduced from 5px */
+            font-size: 12px;  /* Smaller bullet points */
+        }
+
+        /* Mobile optimization */
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                margin: 5px 0;  /* Even tighter on mobile */
+            }
+            
+            .nav-links a {
+                margin: 0 3px;
+                font-size: 12px;  /* Even smaller on mobile */
+            }
+            
+            .nav-links span {
+                margin: 0 1px;
+                font-size: 10px;
+            }
+        }
+
+        /* Mobile optimizations */
+        @media screen and (max-width: 768px) {
+            /* Make table scrollable horizontally */
+            .container {
+                padding: 10px;
+                padding-bottom: 100px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                font-size: 12px;  /* Slightly smaller font */
+            }
+
+            /* Hide less important columns */
+            th:nth-child(3),  /* Initial Supply */
+            td:nth-child(3),
+            th:nth-child(6),  /* Creation Time */
+            td:nth-child(6) {
+                display: none;
+            }
+
+            /* Stack input controls vertically */
+            .input-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .input-group {
+                width: 100%;
+                justify-content: space-between;
+                margin: 0 8px;  /* Add margin on sides */
+            }
+
+            .input-section {
+                padding: 8px;
+                bottom: 2px;
+                gap: 1px;
+            }
+
+            .input-section input {
+                height: 32px;
+                padding: 4px 8px;
+                font-size: 14px;
+            }
+
+            .input-section button {
+                height: 32px;
+                padding: 4px 8px;
+                font-size: 14px;
+            }
+
+            .input-controls {
+                gap: 5px;
+            }
+
+            .input-group {
+                gap: 4px;
+            }
+
+            /* Adjust table to give more space */
+            .container {
+                padding-bottom: 120px;
+            }
+
+            /* Adjust rules section for better readability */
+            .rules {
+                font-size: 13px;
+                padding: 15px;
+            }
+
+            .rules ul {
+                padding-left: 15px;
+            }
+
+            /* Make navigation links more touchable */
+            .rules a {
+                padding: 8px 0;
+                display: inline-block;
+                min-height: 44px;  /* iOS recommended minimum */
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .hide-mobile {
+                display: none;
+            }
+        }
+
+        @keyframes particle-in {
+            0% {
+                transform: translate(var(--startX), var(--startY));
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+        }
+
+        .combine-animation {
+            position: fixed;
+            top: 32%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        @keyframes burn-out {
+            0% {
+                transform: translate(var(--startX), var(--startY));
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--startX), calc(var(--startY) - 100px));
+                opacity: 0;
+            }
+        }
+
+        .burn-animation {
+            position: fixed;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .burn-particle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+
+        .cell-overlay {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            z-index: 1000;
+            font-family: monospace;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffa500;
+            text-shadow: 0 0 5px #ff4500;
+            animation: glow 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #ff4500;
+            }
+            to {
+                text-shadow: 0 0 10px #ff4500, 0 0 20px #ff0000;
+            }
+        }
+
+        #combinedAssetsTable {
+            position: sticky;
+            top: 0;
+            background-color: #262625;
+            z-index: 998;
+            border: 1px solid #a7ffea;
+        }
+
+        #combinedAssetsTable thead {
+            position: sticky;
+            top: 0;
+            background-color: #262626;
+            z-index: 999;
+            border-bottom: 1px solid cyan;
+        }
+
+        #combinedAssetsTable th, #combinedAssetsTable td {
+            border: 1px solid #a7ffea;
+        }
+
+        /* Remove padding from asset table */
+        #assetTable {
+            /* removed padding-top */
+        }
+
+        .particle-container {
+            pointer-events: none;
+            z-index: 1001;
+            font-size: 18px;
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .particle-container span {
+            animation: float-up 8s infinite;
+            display: inline-block;
+            text-shadow: 0 0 5px currentColor;
+            opacity: 0.7;
+            position: absolute;
+        }
+
+        @keyframes float-up {
+            0% { 
+                transform: translate(var(--offsetX, 0), var(--offsetY, 0)); 
+                opacity: 0.7; 
+            }
+            100% { 
+                transform: translate(var(--offsetX, 0), calc(var(--offsetY, 0) - 60px)); 
+                opacity: 0; 
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="rules">
             <p>
-                Welcome to your own MIDSOMAR manager! Here are the rules:
+                Welcome to your asset manager!
                 <ul>
-                    <li>NOTE: Combining combined assets is not possible atm</li>
-                    <li>Base assets (MS 00-76) can only be combined in groups of 1, 3, 7, 11, or 13 sequential numbers</li>
-                    <li>When assets are combined, they are burned and create a new asset named after their range (e.g., MS 0103 for combining MS 01 through MS 03)</li>
                     <li>The "Simulate Shuffle" button randomly distributes assets</li>
-                    <li>Fill in Asset index and amount to burn</li>
+                    <li>Base assets (MS 00-76) must be combined in sequential groups of 1, 3, 7, 11, or 13.</li>
+                    <li>To combine click on first name and last to create a range, or input manually.</li>
+                    <li>Assets used to combine are burned and create a new asset populated in the top table</li>
+                    <li>To burn assets click on My Assets column in the cell of the asset or input manually then input amount.</li>
                     <li>Orange rows indicate assets you currently own</li>
                     <li>Columns are sortable</li>
-                    <li>The Range column shows what base assets were combined to create that asset</li>
-                    <li>The Factor column shows how many assets were combined (and their sub-factors in parentheses)</li>
+                    <li>NOTE: Combining combined assets is not possible atm</li>
                 </ul>
-                <p>
-                    <a href="index.html">Main page</a>
-                    <span style="margin: 0 10px;">•</span>
+                <p class="nav-links">
+                    <a href="index.html">Pyramid</a>
+                    <span>•</span>
+                    <a href="about.html">About</a>
+                    <span>•</span>
                     <a href="My_Assets.html">My assets</a>
-                    <span style="margin: 0 10px;">•</span>
+                    <span>•</span>
                     <a href="prize-distribution.html">Prize calculator</a>
-                    <span style="margin: 0 10px;">•</span>
-                    <a href="pyramid.html">Pyramid</a>
                 </p>
             </p>
         </div>
+
+        <!--Combined Assets table-->
+        <table id="combinedAssetsTable">
+            <thead>
+                <tr>
+                    <th data-sort="name">Name</th>
+                    <th data-sort="myAssets">My Assets</th>
+                    <th data-sort="initialSupply">Minted</th>
+                    <th data-sort="circulatingSupply">Circ.</th>
+                    <th data-sort="burnedSupply">Burned</th>
+                    <th data-sort="creationTime">Created</th>
+                    <th data-sort="range">Range</th>
+                    <th data-sort="factor">Factor</th>
+                </tr>
+            </thead>
+            <tbody id="combinedAssetsTableBody">
+            </tbody>
+        </table>
+
+        <!-- Existing assets table -->
         <table id="assetTable">
             <thead>
                 <tr>
                     <th data-sort="name">Name</th>
                     <th data-sort="myAssets">My Assets</th>
-                    <th data-sort="initialSupply">Initial Supply</th>
-                    <th data-sort="circulatingSupply">Circulating</th>
+                    <th data-sort="initialSupply">Minted</th>
+                    <th data-sort="circulatingSupply">Circ.</th>
                     <th data-sort="burnedSupply">Burned</th>
-                    <th data-sort="creationTime">Creation Time</th>
+                    <th data-sort="creationTime">Created</th>
                     <th data-sort="range">Range</th>
                     <th data-sort="factor">Factor</th>
                 </tr>
             </thead>
             <tbody id="assetTableBody">
             </tbody>
-            <tfoot>
-                <tr class="total-row">
-                    <td>Total</td>
-                    <td id="totalMyAssets">0</td>
-                    <td>3003</td>
-                    <td id="totalCirculating">3003</td>
-                    <td id="totalBurned">0</td>
-                    <td id="totalTime">0 min</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tfoot>
         </table>
 
         <div class="input-section">
@@ -262,23 +535,42 @@
     </div>
 
     <script>
+        // Add this with other global variables
+        const overlayHandlers = new Map();
+
+        // Define global function first
+        window.shuffleAssets = function() {
+            if (window.tracker) {
+                window.tracker.shuffleAssets();
+            }
+        };
+
         class AssetTracker {
             constructor() {
+                console.log('Initializing AssetTracker...');
                 this.assets = new Map();
                 this.validFactors = [1, 3, 7, 11, 13];
-                this.sortColumn = 'name';
-                this.sortAscending = true;
                 this.myAssets = new Map();
                 this.isShuffled = false;
+                this.selectedStart = null;
+                this.selectedEnd = null;
                 this.initializeAssets();
-                this.initializeSorting();
-                this.loadState();
+                this.loadState();        // Load state first
+                this.initializeTable();
+                this.initializeSorting(); // Initialize sorting after table
+                this.earthquakeMode = false;
+
+                // Set initial button color
+                const shuffleButton = document.querySelector('button[onclick="shuffleAssets()"]');
+                if (shuffleButton) {
+                    shuffleButton.style.color = '#ffa500';
+                }
             }
 
             initializeAssets() {
                 for (let i = 0; i < 77; i++) {
                     const assetName = i < 10 ? `0${i}` : `${i}`; // Format to two digits
-                    this.assets.set(i.toString(), {
+                    this.assets.set(assetName, {  // Store with padded ID
                         name: `MS ${assetName}`,
                         initialSupply: 77 - i,
                         circulatingSupply: 77 - i,
@@ -314,114 +606,144 @@
             }
 
             validateRange(range) {
-                const numbers = range.split(',').map(n => parseInt(n.trim()));
-                
-                // Check if numbers are sequential
+                console.log('Validating range:', range);
+                let numbers = [];
+
+                if (range.includes('-')) {
+                    const [start, end] = range.split('-').map(n => parseInt(n.trim(), 10));
+                    if (isNaN(start) || isNaN(end)) {
+                        console.error('Invalid range format:', { start, end });
+                        throw new Error('Invalid range format');
+                    }
+                    numbers = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+                } else {
+                    numbers = range.split(',').map(n => parseInt(n.trim(), 10));
+                }
+
+                if (numbers.some(isNaN)) {
+                    console.error('Invalid asset numbers:', numbers);
+                    throw new Error('Invalid asset numbers');
+                }
+
+                numbers.sort((a, b) => a - b);
+                console.log('Sorted numbers:', numbers);
+
+                let factor = numbers.length;
+                if (!this.validFactors.includes(factor)) {
+                    console.error('Invalid factor:', factor);
+                    throw new Error(`Invalid factor: ${factor}. Must be one of ${this.validFactors.join(', ')}`);
+                }
+
                 for (let i = 1; i < numbers.length; i++) {
-                    if (numbers[i] !== numbers[i-1] + 1) {
-                        throw new Error('Range must be sequential');
+                    if (numbers[i] !== numbers[i - 1] + 1) {
+                        console.error('Assets must be sequential:', numbers);
+                        throw new Error('Assets must be sequential');
                     }
                 }
 
-                // Check if length is a valid factor
-                if (!this.validFactors.includes(numbers.length)) {
-                    throw new Error('Number of assets must be one of: 1, 3, 7, 11, 13');
-                }
-
-                // Check if all assets exist and have supply
                 for (const num of numbers) {
-                    const asset = this.assets.get(num.toString());
-                    if (!asset || asset.circulatingSupply === 0) {
-                        throw new Error(`Asset ${num} is not available`);
+                    const myAmount = this.myAssets.get(num.toString().padStart(2, '0')) || 0;
+                    if (myAmount === 0) {
+                        console.error(`You don't own MS ${num}`);
+                        throw new Error(`You don't own MS ${num}`);
                     }
                 }
 
-                // Create properly padded index for checking existence
-                const paddedStart = numbers[0].toString().padStart(2, '0');
-                const paddedEnd = numbers[numbers.length-1].toString().padStart(2, '0');
-                const newIndex = `${paddedStart}${paddedEnd}`;
-
-                // Debug log
-                console.log('Checking for existing combination:', newIndex);
-                console.log('Existing assets:', Array.from(this.assets.keys()));
-
-                // Check if combined index already exists
-                if (this.assets.has(newIndex)) {
-                    throw new Error('This combination already exists');
-                }
-
-                return {
-                    numbers,
-                    factor: numbers.length
-                };
+                return { numbers, factor: factor.toString() };
             }
 
             combineAssets(range) {
+                console.log('Combining assets with range:', range);
                 const { numbers, factor } = this.validateRange(range);
-                
+                console.log('Validated numbers:', numbers, 'Factor:', factor);
+
+                if (!numbers || numbers.length === 0) {
+                    console.error('No valid numbers found:', numbers);
+                    return;
+                }
+
                 // Ensure consistent padding for new asset index
                 const paddedStart = numbers[0].toString().padStart(2, '0');
-                const paddedEnd = numbers[numbers.length-1].toString().padStart(2, '0');
+                const paddedEnd = numbers[numbers.length - 1].toString().padStart(2, '0');
                 const newIndex = `${paddedStart}${paddedEnd}`;
+                console.log('New asset index:', newIndex);
 
-                // Debug log
-                console.log('Creating new combination:', newIndex);
+                // Check if the new index already exists
+                if (this.assets.has(newIndex)) {
+                    console.error('This combination already exists:', newIndex);
+                    showError('This combination already exists and cannot be combined again.');
+                    return;
+                }
 
                 // Get factors from any combined assets in the range
                 const subFactors = numbers.map(num => {
-                    const asset = this.assets.get(num.toString());
-                    return asset.factor || '';
+                    const asset = this.assets.get(num.toString().padStart(2, '0'));
+                    return asset ? asset.factor || '' : '';
                 }).filter(f => f).join(',');
 
                 const factors = factor !== 'none' ? (subFactors ? `${factor}(${subFactors})` : factor.toString()) : 'none';
 
                 // Burn original assets and update myAssets
                 numbers.forEach(num => {
-                    const asset = this.assets.get(num.toString());
-                    asset.circulatingSupply--;
-                    asset.burnedSupply++;
-                    
-                    const myAssetAmount = this.myAssets.get(num.toString()) || 0;
+                    const asset = this.assets.get(num.toString().padStart(2, '0'));
+                    if (asset) {
+                        asset.circulatingSupply--;
+                        asset.burnedSupply++;
+                    } else {
+                        console.error('Asset not found for number:', num);
+                    }
+
+                    const myAssetAmount = this.myAssets.get(num.toString().padStart(2, '0')) || 0;
                     if (myAssetAmount > 0) {
                         if (myAssetAmount === 1) {
-                            this.myAssets.delete(num.toString());
+                            this.myAssets.delete(num.toString().padStart(2, '0'));
                         } else {
-                            this.myAssets.set(num.toString(), myAssetAmount - 1);
+                            this.myAssets.set(num.toString().padStart(2, '0'), myAssetAmount - 1);
                         }
                     }
                 });
 
-                // Create new asset with combined initial supply
+                // Create the combined asset
                 this.assets.set(newIndex, {
-                    name: `MS ${newIndex}`,
+                    name: `MS ${paddedStart}${paddedEnd}`,
                     initialSupply: 1,
                     circulatingSupply: 1,
                     burnedSupply: 0,
                     creationTime: new Date().toISOString(),
-                    range: `${paddedStart}-${paddedEnd}`,
+                    range: `${numbers[0]}-${numbers[numbers.length - 1]}`,
                     factor: factors
                 });
 
-                // Add the new asset to user's assets
+                // Add to user's assets
                 this.myAssets.set(newIndex, 1);
 
-                // Save state after combining
                 this.saveState();
                 this.updateTable();
+                return newIndex;
             }
 
             burnAssets(range) {
-                const numbers = range.split(',').map(n => parseInt(n.trim()));
-                
+                console.log('Burning assets with range:', range);
+                const numbers = range.split(',').map(n => parseInt(n.trim(), 10));
+                console.log('Parsed numbers:', numbers);
+
+                // Add burn animation
+                this.addBurnAnimation();
+
                 numbers.forEach(num => {
-                    const asset = this.assets.get(num.toString());
+                    const assetId = num.toString().padStart(2, '0');
+                    const asset = this.assets.get(assetId);
                     if (asset && asset.circulatingSupply > 0) {
                         asset.circulatingSupply--;
                         asset.burnedSupply++;
-                        const myAssetAmount = this.myAssets.get(num.toString()) || 0;
+                        console.log(`Burned asset: ${assetId}, Remaining supply: ${asset.circulatingSupply}`);
+
+                        const myAssetAmount = this.myAssets.get(assetId) || 0;
                         if (myAssetAmount > 0) {
-                            this.myAssets.set(num.toString(), myAssetAmount - 1);
+                            this.myAssets.set(assetId, myAssetAmount - 1);
                         }
+                    } else {
+                        console.error('Asset not found or no circulating supply for:', assetId);
                     }
                 });
 
@@ -447,7 +769,9 @@
                 
                 if (this.isShuffled) {
                     this.isShuffled = false;
-                    document.querySelector('button[onclick="shuffleAssets()"]').textContent = 'Simulate Shuffle';
+                    const shuffleButton = document.querySelector('button[onclick="shuffleAssets()"]');
+                    shuffleButton.textContent = 'Simulate Shuffle';
+                    shuffleButton.style.color = '#ffa500';
                     localStorage.removeItem('trackerState');
                     
                     // Reset to initial state
@@ -478,14 +802,18 @@
                 });
 
                 this.isShuffled = true;
-                document.querySelector('button[onclick="shuffleAssets()"]').textContent = 'Reset';
+                const shuffleButton = document.querySelector('button[onclick="shuffleAssets()"]');
+                shuffleButton.textContent = 'Reset';
+                shuffleButton.style.color = '#a7ffea';
                 this.saveState();
                 this.updateTable();
             }
 
             updateTable() {
-                const tbody = document.getElementById('assetTableBody');
-                tbody.innerHTML = '';
+                const combinedTbody = document.getElementById('combinedAssetsTableBody');
+                const assetTbody = document.getElementById('assetTableBody');
+                combinedTbody.innerHTML = '';
+                assetTbody.innerHTML = '';
 
                 // Convert Map to array for sorting
                 let assets = Array.from(this.assets.entries())
@@ -516,47 +844,15 @@
                     return this.sortAscending ? aValue - bValue : bValue - aValue;
                 });
 
-                // Calculate total range coverage
-                let coveredPositions = new Set();
-                
+                // Populate tables
                 assets.forEach(asset => {
-                    if (asset.range) {
-                        const [start, end] = asset.range.split('-').map(Number);
-                        for (let i = start; i <= end; i++) {
-                            coveredPositions.add(i);
-                        }
-                    }
-                });
-
-                let rangeCoverage = '';
-                if (coveredPositions.size > 0) {
-                    const coverage = (coveredPositions.size / 77 * 100).toFixed(1);
-                    rangeCoverage = `${coverage}%`;
-                }
-
-                // Update totals in the fixed bottom row
-                const totalRow = document.querySelector('.total-row');
-                if (totalRow) {
-                    totalRow.cells[6].textContent = rangeCoverage; // Update Range cell
-                }
-
-                // Initialize totals
-                let totals = {
-                    myAssets: 0,
-                    circulatingSupply: 0,
-                    burnedSupply: 0,
-                };
-
-                // Update table with sorted data
-                assets.forEach(asset => {
-                    const row = tbody.insertRow();
+                    const row = document.createElement('tr');
                     const myAssetAmount = this.myAssets.get(asset.id) || 0;
 
-                    // If the user has the asset, color the Name and My Assets cells
                     if (myAssetAmount > 0) {
                         row.classList.add('my-assets');
                     } else {
-                        row.classList.remove('my-assets'); // Ensure class is removed if no assets
+                        row.classList.remove('my-assets');
                     }
 
                     // Create cells
@@ -568,28 +864,26 @@
 
                     row.insertCell(2).textContent = asset.initialSupply;
                     row.insertCell(3).textContent = asset.circulatingSupply;
-                    row.insertCell(4).textContent = asset.burnedSupply; // Ensure this is updated
+                    row.insertCell(4).textContent = asset.burnedSupply;
                     row.insertCell(5).textContent = this.formatDateTime(asset.creationTime);
                     row.insertCell(6).textContent = asset.range || '';
                     row.insertCell(7).textContent = asset.factor || '';
 
-                    // Update totals
-                    totals.myAssets += myAssetAmount;
-                    totals.circulatingSupply += asset.circulatingSupply;
-                    totals.burnedSupply += asset.burnedSupply;
+                    // Add to the appropriate table
+                    if (asset.range) {
+                        combinedTbody.appendChild(row); // Add to combined assets table
+                    } else {
+                        assetTbody.appendChild(row); // Add to existing assets table
+                    }
                 });
-
-                // Update the total row with the correct values
-                totalRow.cells[1].textContent = totals.myAssets;
-                totalRow.cells[2].textContent = totals.circulatingSupply;
-                totalRow.cells[4].textContent = totals.burnedSupply; // Ensure burned assets are summed
             }
 
             saveState() {
                 const state = {
                     myAssets: Array.from(this.myAssets.entries()),
                     isShuffled: this.isShuffled,
-                    assets: Array.from(this.assets.entries()) // Save the entire assets state
+                    assets: Array.from(this.assets.entries()), // Save the entire assets state
+                    earthquakeMode: this.earthquakeMode
                 };
                 localStorage.setItem('trackerState', JSON.stringify(state));
             }
@@ -601,190 +895,582 @@
                     this.myAssets = new Map(state.myAssets);
                     this.isShuffled = state.isShuffled;
                     
+                    // Update shuffle button text and color based on state
+                    const shuffleButton = document.querySelector('button[onclick="shuffleAssets()"]');
+                    if (shuffleButton) {
+                        shuffleButton.textContent = this.isShuffled ? 'Reset' : 'Simulate Shuffle';
+                        shuffleButton.style.color = this.isShuffled ? '#a7ffea' : '#ffa500';
+                    }
+                    
                     // Restore assets state if it exists
                     if (state.assets) {
                         this.assets = new Map(state.assets);
                     }
                     
-                    // Update shuffle button text based on loaded state
-                    const shuffleButton = document.querySelector('button[onclick="shuffleAssets()"]');
-                    if (shuffleButton) {
-                        shuffleButton.textContent = this.isShuffled ? 'Reset' : 'Simulate Shuffle';
+                    this.earthquakeMode = state.earthquakeMode || false;
+                    if (this.earthquakeMode) {
+                        this.toggleEarthquake();
                     }
                     
                     this.updateTable();
                 }
             }
+
+            calculateRangeCoverage(assets) {
+                let coveredPositions = new Set();
+                
+                assets.forEach(asset => {
+                    if (asset.range) {
+                        const [start, end] = asset.range.split('-').map(Number);
+                        for (let i = start; i <= end; i++) {
+                            coveredPositions.add(i);
+                        }
+                    }
+                });
+
+                if (coveredPositions.size > 0) {
+                    const coverage = (coveredPositions.size / 77 * 100).toFixed(1);
+                    return `${coverage}%`;
+                }
+                return '';
+            }
+
+            initializeTable() {
+                console.log('Setting up table click handlers...');
+                const table = document.getElementById('assetTable');
+                if (!table) {
+                    console.error('Could not find assetTable element');
+                    return;
+                }
+
+                table.addEventListener('click', (e) => {
+                    const cell = e.target.closest('td');
+                    if (!cell) {
+                        console.log('Click was not on a cell');
+                        return;
+                    }
+                    if (cell.cellIndex !== 0) {
+                        console.log('Click was not on Name column');
+                        return;
+                    }
+                    
+                    const row = cell.parentElement;
+                    const nameCell = row.cells[0];
+                    const assetId = parseInt(nameCell.textContent.replace('MS ', ''), 10);
+                    console.log('Clicked asset:', assetId);
+                    
+                    if (this.selectedStart === null) {
+                        console.log('First selection:', assetId);
+                        this.selectedStart = assetId;
+                        nameCell.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+                        nameCell.style.color = '#ffa500';
+                    } else {
+                        console.log('Second selection:', assetId);
+                        this.selectedEnd = assetId;
+                        const range = this.selectedStart <= this.selectedEnd 
+                            ? `${this.selectedStart}-${this.selectedEnd}` 
+                            : `${this.selectedEnd}-${this.selectedStart}`;
+                        console.log('Constructed range:', range);
+
+                        try {
+                            const { numbers, factor } = this.validateRange(range);
+                            console.log('Range validation:', { numbers, factor });
+                            document.getElementById('combineStart').value = this.selectedStart;
+                            document.getElementById('combineEnd').value = this.selectedEnd;
+                            this.highlightRange(this.selectedStart, this.selectedEnd);
+                        } catch (error) {
+                            console.log('Invalid range');
+                            this.clearSelection();
+                            showError('Invalid range selection');
+                        }
+                    }
+                });
+            }
+
+            highlightRange(start, end) {
+                console.log('Highlighting range:', start, 'to', end);
+                this.clearSelection();
+                const rows = document.getElementById('assetTableBody').rows;
+                for (let row of rows) {
+                    const nameCell = row.cells[0];
+                    const assetId = parseInt(nameCell.textContent.replace('MS ', ''));
+                    if (assetId >= start && assetId <= end) {
+                        nameCell.style.backgroundColor = 'rgba(255, 0, 0, 0.1)'; // Semi-transparent light red
+                        nameCell.style.color = '#ffa500'; // Bright orange text
+                    }
+                }
+            }
+
+            clearSelection() {
+                console.log('Clearing selection');
+                this.selectedStart = null;
+                this.selectedEnd = null;
+                
+                const rows = document.getElementById('assetTableBody').rows;
+                for (let row of rows) {
+                    const nameCell = row.cells[0];
+                    nameCell.style.backgroundColor = '';
+                    nameCell.style.color = ''; // Reset text color
+                    
+                    // Maintain my-assets class for the row if needed
+                    const myAssetAmount = parseInt(row.cells[1].textContent) || 0;
+                    row.classList.toggle('my-assets', myAssetAmount > 0);
+                }
+            }
+
+            // Update the animation method
+            addCombineAnimation() {
+                return new Promise(resolve => {
+                    const container = document.createElement('div');
+                    container.className = 'combine-animation';
+                    
+                    const colors = [
+                        '#a7ffea',  // Theme cyan
+                        '#ffa500',  // Theme orange
+                        '#ffffd0',  // Very light yellow
+                        '#ffd700',  // Gold
+                        '#ffa500',  // Orange
+                        '#ff4500',  // Red-orange
+                        '#ff0000',  // Red
+                        '#8B008B',  // Dark Magenta
+                        '#3DED97'   // Seafoam
+                    ];
+                    
+                    for (let i = 0; i < 30; i++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'particle';
+                        
+                        const size = 4 + Math.random() * 8;
+                        particle.style.width = `${size}px`;
+                        particle.style.height = `${size}px`;
+                        
+                        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        
+                        const angle = (Math.PI * 2 * i) / 30;
+                        const radius = 150 + Math.random() * 100;
+                        const startX = Math.cos(angle) * radius;
+                        const startY = Math.sin(angle) * radius;
+                        
+                        particle.style.setProperty('--startX', `${startX}px`);
+                        particle.style.setProperty('--startY', `${startY}px`);
+                        
+                        particle.style.left = '0';
+                        particle.style.top = '0';
+                        
+                        particle.style.animation = `particle-in 1.25s ease-in-out ${Math.random() * 0.15}s forwards`;
+                        
+                        container.appendChild(particle);
+                    }
+                    
+                    document.body.appendChild(container);
+                    
+                    setTimeout(() => {
+                        container.remove();
+                        resolve();
+                    }, 1500);
+                });
+            }
+
+            addBurnAnimation() {
+                const container = document.createElement('div');
+                container.className = 'burn-animation';
+                
+                // Create flame-like particles
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'burn-particle';
+                    
+                    const size = 4 + Math.random() * 8;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    // Use flame colors
+                    const colors = [
+                        '#ff4500',  // Red-orange
+                        '#ffa500',  // Orange
+                        '#ff0000',  // Red
+                        '#ffff00'   // Yellow
+                    ];
+                    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    // Set initial position
+                    const angle = (Math.PI * 2 * i) / 20;
+                    const radius = 30 + Math.random() * 20;
+                    particle.style.setProperty('--startX', `${Math.cos(angle) * radius}px`);
+                    particle.style.setProperty('--startY', `${Math.sin(angle) * radius}px`);
+                    
+                    particle.style.animation = `burn-out 1.5s ease-out ${Math.random() * 0.2}s forwards`;
+                    
+                    container.appendChild(particle);
+                }
+                
+                document.body.appendChild(container);
+                setTimeout(() => container.remove(), 2000);
+            }
+
+            toggleEarthquake() {
+                this.earthquakeMode = !this.earthquakeMode;
+                
+                if (this.earthquakeMode) {
+                    // Start the earthquake effect
+                    this.earthquakeInterval = setInterval(() => {
+                        const cells = document.querySelectorAll('td');
+                        cells.forEach(cell => {
+                            if (Math.random() < 0.3) { // Only shake some cells each frame
+                                cell.style.transform = `translate(${Math.random() * 2 - 1}px, ${Math.random() * 2 - 1}px)`;
+                            }
+                        });
+                    }, 50);
+                } else {
+                    // Stop the earthquake effect
+                    clearInterval(this.earthquakeInterval);
+                    // Reset all cell positions
+                    const cells = document.querySelectorAll('td');
+                    cells.forEach(cell => {
+                        cell.style.transform = 'none';
+                    });
+                }
+                
+                // Save state
+                this.saveState();
+            }
         }
 
-        const tracker = new AssetTracker();
-        tracker.updateTable();
+        // Initialize tracker as a global variable
+        window.tracker = new AssetTracker();
 
         function showError(message) {
+            console.error('Error:', message);
             const error = document.getElementById('error');
-            error.textContent = message;
-            error.style.display = 'block';
-            setTimeout(() => {
-                error.style.display = 'none';
-            }, 3000);
+            if (error) {
+                error.textContent = message;
+                error.style.display = 'block';
+                setTimeout(() => {
+                    error.style.display = 'none';
+                }, 3000);
+            } else {
+                console.error('Error element not found');
+            }
         }
 
-        function combineAssets() {
-            const start = document.getElementById('combineStart').value;
-            const end = document.getElementById('combineEnd').value;
-            if (!start || !end) {
-                showError('Please enter both start and end values');
+        // Define animation function globally
+        window.addCombineAnimation = function() {
+            return new Promise(resolve => {
+                const container = document.createElement('div');
+                container.className = 'combine-animation';
+                
+                const colors = [
+                    '#a7ffea',  // Theme cyan
+                    '#ffa500',  // Theme orange
+                    '#ffffd0',  // Very light yellow
+                    '#ffd700',  // Gold
+                    '#ffa500',  // Orange
+                    '#ff4500',  // Red-orange
+                    '#ff0000',  // Red
+                    '#8B008B',  // Dark Magenta
+                    '#3DED97'   // Seafoam
+                ];
+                
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    
+                    const size = 4 + Math.random() * 8;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    const angle = (Math.PI * 2 * i) / 30;
+                    const radius = 150 + Math.random() * 100;
+                    const startX = Math.cos(angle) * radius;
+                    const startY = Math.sin(angle) * radius;
+                    
+                    particle.style.setProperty('--startX', `${startX}px`);
+                    particle.style.setProperty('--startY', `${startY}px`);
+                    
+                    particle.style.left = '0';
+                    particle.style.top = '0';
+                    
+                    particle.style.animation = `particle-in 1.25s ease-in-out ${Math.random() * 0.15}s forwards`;
+                    
+                    container.appendChild(particle);
+                }
+                
+                document.body.appendChild(container);
+                
+                setTimeout(() => {
+                    container.remove();
+                    resolve();
+                }, 1500);
+            });
+        };
+
+        // Define combineAssets globally
+        window.combineAssets = async function() {
+            try {
+                const start = document.getElementById('combineStart').value;
+                const end = document.getElementById('combineEnd').value;
+                
+                if (!start || !end) {
+                    showError('Please enter both start and end values');
+                    return;
+                }
+
+                const startNum = parseInt(start, 10);
+                const endNum = parseInt(end, 10);
+
+                if (isNaN(startNum) || isNaN(endNum)) {
+                    showError('Invalid input values');
+                    return;
+                }
+
+                // Prepare the range string
+                const range = [];
+                for (let i = Math.min(startNum, endNum); i <= Math.max(startNum, endNum); i++) {
+                    range.push(i);
+                }
+
+                const rangeString = range.join(',');
+                console.log('Input to validateRange:', rangeString);
+
+                // Validate the range
+                const { numbers, factor } = tracker.validateRange(rangeString);
+                console.log('Validated numbers:', numbers, 'Factor:', factor);
+
+                if (!numbers || numbers.length === 0) {
+                    console.error('No valid numbers found:', numbers);
+                    return;
+                }
+
+                await addCombineAnimation();
+                tracker.combineAssets(rangeString);
+                
+            } catch (error) {
+                console.error('Error in combineAssets:', error);
+                showError(error.message);
+            }
+        };
+
+        const flameChars = ['/', '\\', '|', '-', '>', '<', '{', '}', '(', ')', '[', ']'];
+        const smokeChars = ['·', '°', '∙', '⋅', '∘', '○', '•'];
+        const emberChars = ['*', '\'', '"', '⚬', '*', '���', 'O', '✦', '★'];
+        const pyramidColors = [
+            '#a7ffea',  // Cyan
+            '#ffa500',  // Orange
+            '#ffffd0',  // Very light yellow
+            '#ffd700',  // Gold
+            '#ff4500',  // Red-orange
+            '#ff0000',  // Red
+            '#8B008B',  // Dark Magenta
+            '#3DED97'   // Seafoam
+        ];
+
+        function getRandomFlameFrame() {
+            const char1 = flameChars[Math.floor(Math.random() * flameChars.length)];
+            const char2 = flameChars[Math.floor(Math.random() * flameChars.length)];
+            return char1 + char2;
+        }
+
+        function getRandomSmokeChar() {
+            return smokeChars[Math.floor(Math.random() * smokeChars.length)];
+        }
+
+        function getRandomEmberChar() {
+            return emberChars[Math.floor(Math.random() * emberChars.length)];
+        }
+
+        function getRandomPyramidColor() {
+            return pyramidColors[Math.floor(Math.random() * pyramidColors.length)];
+        }
+
+        function getRandomParticleCount() {
+            const counts = [3, 7, 9, 11, 13];
+            return counts[Math.floor(Math.random() * counts.length)];
+        }
+
+        function addCellOverlay(cell) {
+            // Remove any existing overlay and particle container
+            const existingOverlay = document.querySelector('.cell-overlay');
+            const existingParticle = document.querySelector('.particle-container');
+            if (existingOverlay) {
+                clearInterval(Number(existingOverlay.dataset.animationId));
+                const oldHandler = existingOverlay.dataset.scrollHandler;
+                if (oldHandler) {
+                    window.removeEventListener('scroll', window[oldHandler]);
+                }
+                existingOverlay.remove();
+            }
+            if (existingParticle) {
+                existingParticle.remove();
+            }
+
+            const overlay = document.createElement('div');
+            overlay.className = 'cell-overlay ascii-flame';
+
+            // Start earthquake when flame starts
+            if (window.tracker && !window.tracker.earthquakeMode) {
+                window.tracker.toggleEarthquake();
+            }
+            
+            const particleContainer = document.createElement('div');
+            particleContainer.className = 'particle-container';
+            
+            // Update the position calculation
+            const updatePosition = () => {
+                if (cell.isConnected) {
+                    const cellRect = cell.getBoundingClientRect();
+                    overlay.style.position = 'fixed';
+                    overlay.style.left = `${cellRect.left}px`;
+                    overlay.style.top = `${cellRect.top}px`;
+                    overlay.style.width = `${cellRect.width}px`;
+                    overlay.style.height = `${cellRect.height}px`;
+                    
+                    particleContainer.style.position = 'fixed';
+                    particleContainer.style.left = `${cellRect.left - 0}px`;
+                    particleContainer.style.top = `${cellRect.top - 45}px`;  // How high above the cell
+                    particleContainer.style.height = '100px';  // Add this to set container height
+                }
+            };
+            updatePosition();
+
+            // Add scroll handler
+            const handlerId = `scrollHandler${Date.now()}`;
+            window[handlerId] = () => {
+                if (cell.isConnected) {
+                    updatePosition();
+                }
+            };
+            window.addEventListener('scroll', window[handlerId]);
+            overlay.dataset.scrollHandler = handlerId;
+
+            // Main animation
+            const animation = setInterval(() => {
+                // Update flame
+                overlay.textContent = getRandomFlameFrame();
+                
+                // Clear old particles that have faded out
+                particleContainer.querySelectorAll('span').forEach(particle => {
+                    if (parseFloat(getComputedStyle(particle).opacity) < 0.1) {
+                        particle.remove();
+                    }
+                });
+                
+                // Update particles less frequently with lower chance
+                if (Math.random() < 0.15) {  // Reduced from 0.3 to 0.15 for less frequent generation
+                    const particleCount = getRandomParticleCount();
+                    for (let i = 0; i < particleCount; i++) {
+                        const particle = document.createElement('span');
+                        particle.textContent = Math.random() < 0.6 ? getRandomSmokeChar() : getRandomEmberChar();
+                        particle.style.color = getRandomPyramidColor();
+                        particle.style.setProperty('--offsetY', `-${Math.random() * 60}px`);
+                        particle.style.setProperty('--offsetX', `${Math.random() * 20 - 10}px`);
+                        particleContainer.appendChild(particle);
+                    }
+                }
+            }, 150);
+
+            document.body.appendChild(overlay);
+            document.body.appendChild(particleContainer);
+            overlay.dataset.animationId = animation;
+
+            // Clean up when clicking outside
+            document.addEventListener('click', function cleanup(e) {
+                if (e.target.matches('#burnAsset') || 
+                    e.target.matches('.cell-overlay') || 
+                    e.target.closest('.cell-overlay') ||
+                    e.target.closest('td')?.cellIndex === 1) {
+                    return;
+                }
+                
+                clearInterval(animation);
+                window.removeEventListener('scroll', window[handlerId]);
+                delete window[handlerId];
+                overlay.remove();
+                particleContainer.remove();
+                document.removeEventListener('click', cleanup);
+                
+                if (window.tracker && window.tracker.earthquakeMode) {
+                    window.tracker.toggleEarthquake();
+                }
+            });
+        }
+
+        // Update click handler cleanup
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('#burnAsset') || 
+                e.target.matches('.cell-overlay') || 
+                e.target.closest('.cell-overlay') ||
+                e.target.closest('td')?.cellIndex === 1 ||
+                e.target.textContent === 'Earthquake') {
                 return;
             }
             
-            const range = [];
-            for (let i = parseInt(start); i <= parseInt(end); i++) {
-                range.push(i);
+            const existingOverlay = document.querySelector('.cell-overlay');
+            const existingParticles = document.querySelector('.particle-container');
+            if (existingOverlay) {
+                clearInterval(Number(existingOverlay.dataset.animationId));
+                const handler = overlayHandlers.get(existingOverlay);
+                if (handler) {
+                    window.removeEventListener('scroll', handler);
+                    overlayHandlers.delete(existingOverlay);
+                }
+                existingOverlay.remove();
+                if (existingParticles) existingParticles.remove();
             }
-            
-            try {
-                tracker.combineAssets(range.join(','));
-                document.getElementById('combineStart').value = '';
-                document.getElementById('combineEnd').value = '';
-            } catch (error) {
-                showError(error.message);
-            }
-        }
+        });
 
+        // Update burn cleanup
         function burnAssets() {
             const asset = document.getElementById('burnAsset').value;
-            const amount = document.getElementById('burnAmount').value;
+            const amount = parseInt(document.getElementById('burnAmount').value);
+
             if (!asset || !amount) {
                 showError('Please enter both asset name and amount');
                 return;
             }
 
             try {
-                // Repeat the asset number 'amount' times in the range
-                const range = Array(parseInt(amount)).fill(asset).join(',');
-                tracker.burnAssets(range);
+                // Remove flame animation before burning
+                const existingOverlay = document.querySelector('.cell-overlay');
+                const existingParticle = document.querySelector('.particle-container');
+                if (existingOverlay) {
+                    clearInterval(Number(existingOverlay.dataset.animationId));
+                    const handler = overlayHandlers.get(existingOverlay);
+                    if (handler) {
+                        window.removeEventListener('scroll', handler);
+                        overlayHandlers.delete(existingOverlay);
+                    }
+                    existingOverlay.remove();
+                }
+                if (existingParticle) {
+                    existingParticle.remove();
+                }
+
+                // Original burn logic
+                const range = Array(amount).fill(asset).join(',');
+                window.tracker.burnAssets(range);
+                
+                // Clear inputs after successful burn
                 document.getElementById('burnAsset').value = '';
                 document.getElementById('burnAmount').value = '';
+                
             } catch (error) {
                 showError(error.message);
             }
         }
 
-        function shuffleAssets() {
-            tracker.shuffleAssets();
-        }
-
-        function checkBurnAssetInput() {
-            const burnAssetInput = document.getElementById('burnAsset');
-            const errorDiv = document.getElementById('error');
-
-            if (burnAssetInput.value.length === 1) {
-                errorDiv.textContent = "Use two digits, you are the captain now";
-                errorDiv.style.display = 'block';
-            } else {
-                errorDiv.style.display = 'none'; // Hide error if input is valid
-            }
-
-            if (burnAssetInput.value.length >= 2) {
+        // Add this after where overlayHandlers is defined
+        document.addEventListener('click', (e) => {
+            const cell = e.target.closest('td');
+            if (cell && cell.cellIndex === 1) {  // Check if it's a "My Assets" column cell
+                const assetName = cell.closest('tr').querySelector('td').textContent;  // Get "MS XX"
+                const assetNumber = assetName.replace('MS ', '');  // Remove "MS " to get just the number
+                document.getElementById('burnAsset').value = assetNumber;
                 document.getElementById('burnAmount').focus();
+                addCellOverlay(cell);
             }
-        }
-
-        let currentSortColumn = 'name'; // Default sort column
-        let sortAscending = true; // Default sort order
-
-        function sortTable(column) {
-            if (currentSortColumn === column) {
-                sortAscending = !sortAscending;
-            } else {
-                currentSortColumn = column;
-                sortAscending = true;
-            }
-            updateTable();
-        }
-
-        function updateTable() {
-            const tbody = document.getElementById('assetTableBody');
-            tbody.innerHTML = '';
-
-            let assets = Array.from(this.assets.entries())
-                .map(([id, asset]) => ({ id, ...asset }))
-                .filter(asset => asset.initialSupply > 0);
-
-            assets.sort((a, b) => {
-                let aValue, bValue;
-
-                if (currentSortColumn === 'creationTime') {
-                    aValue = new Date(a.creationTime);
-                    bValue = new Date(b.creationTime);
-                } else {
-                    aValue = parseFloat(a[currentSortColumn]) || 0;
-                    bValue = parseFloat(b[currentSortColumn]) || 0;
-                }
-
-                return sortAscending ? aValue - bValue : bValue - aValue;
-            });
-
-            let coveredPositions = new Set();
-            
-            assets.forEach(asset => {
-                if (asset.range) {
-                    const [start, end] = asset.range.split('-').map(Number);
-                    for (let i = start; i <= end; i++) {
-                        coveredPositions.add(i);
-                    }
-                }
-            });
-
-            let rangeCoverage = '';
-            if (coveredPositions.size > 0) {
-                const coverage = (coveredPositions.size / 77 * 100).toFixed(1);
-                rangeCoverage = `${coverage}%`;
-            }
-
-            const totalRow = document.querySelector('.total-row');
-            if (totalRow) {
-                totalRow.cells[6].textContent = rangeCoverage;
-            }
-
-            let totals = {
-                myAssets: 0,
-                circulatingSupply: 0,
-                burnedSupply: 0,
-            };
-
-            assets.forEach(asset => {
-                const row = tbody.insertRow();
-                const myAssetAmount = this.myAssets.get(asset.id) || 0;
-
-                if (myAssetAmount > 0) {
-                    row.classList.add('my-assets');
-                } else {
-                    row.classList.remove('my-assets');
-                }
-
-                const nameCell = row.insertCell(0);
-                nameCell.textContent = asset.name;
-                
-                const myAssetsCell = row.insertCell(1);
-                myAssetsCell.textContent = myAssetAmount;
-
-                row.insertCell(2).textContent = asset.initialSupply;
-                row.insertCell(3).textContent = asset.circulatingSupply;
-                row.insertCell(4).textContent = asset.burnedSupply;
-                row.insertCell(5).textContent = this.formatDateTime(asset.creationTime);
-                row.insertCell(6).textContent = asset.range || '';
-                row.insertCell(7).textContent = asset.factor || '';
-
-                totals.myAssets += myAssetAmount;
-                totals.circulatingSupply += asset.circulatingSupply;
-                totals.burnedSupply += asset.burnedSupply;
-            });
-
-            totalRow.cells[1].textContent = totals.myAssets;
-            totalRow.cells[2].textContent = totals.circulatingSupply;
-            totalRow.cells[4].textContent = totals.burnedSupply;
-        }
-    </script>
+        });
+     </script>
 </body>
 </html>

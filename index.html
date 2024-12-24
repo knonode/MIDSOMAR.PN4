@@ -1,127 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <title>3003 Numbered Pyramid</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14'>☀️</text></svg>">
-    <title>MIDSOMAR.PN4</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            margin: 0;
-            padding: 20px;
-            font-family: 'Maven Pro', monospace;
+        body { 
+            font-family: "Maven Pro", monospace; 
+            text-align: center; 
+            line-height: 1;
+            font-size: 11px;
+            letter-spacing: -0.5px;
+            word-spacing: -2px;
             background-color: #262626;
-            color: #eee;
+            color: #a7ffea;
             transition: background-color 0.3s, color 0.3s;
         }
-        h1 {
-            color: #a7ffea; /* {{ edit_9 }} Title color */
+
+        .nav-links {
+            margin-top: 30px;
+            font-family: 'Maven Pro', monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            letter-spacing: normal;
+            word-spacing: normal;
         }
-        a {
-            color: #a7ffea; /* {{ edit_10 }} Link color */
-            text-decoration: none; /* {{ edit_11 }} Remove underline from links */
+
+        .nav-links a {
+            color: #a7ffea;
+            text-decoration: none;
+            transition: color 0.3s ease;
         }
-        a:hover {
-            text-decoration: underline; /* {{ edit_12 }} Underline on hover */
+
+        .nav-links a:hover {
+            text-decoration: underline;
         }
-        .container {
-            max-width: 800px;
-            width: 100%;
+
+        .nav-links span {
+            color: #666;
         }
-        h1 {
+
+        .floating-title {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
+            z-index: 1000;
+            padding: 20px;
+            border-radius: 10px;
         }
-        img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        figure {
+
+        .floating-title h1 {
+            font-family: 'Maven Pro', sans-serif;
+            color: #a7ffea;
             margin: 0;
+            font-size: 4vw; /* Responsive font size */
+            line-height: 1.2;
+            letter-spacing: 10px;
+            text-shadow: 0 0 10px rgba(167, 255, 234, 0.5);
         }
-        figcaption {
-            text-align: center;
-            margin-top: 10px;
+
+        .floating-title h2 {
+            font-family: 'Maven Pro', sans-serif;
+            color: #a7ffea;
+            margin: 10px 0 0 0;
+            font-size: 4vw; /* Same size as MIDSOMAR */
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .floating-title h1 {
+                font-size: 8vw;
+                letter-spacing: 5px;
+            }
+            .floating-title h2 {
+                font-size: 8vw; /* Same size as MIDSOMAR */
+                letter-spacing: 3px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-    <h1>MIDSOMAR.PN4</h1>
-    <p style="text-align: center;">
-        <a href="tracker.html">Asset manager</a>
-        <span style="margin: 0 10px;">•</span>
-        <a href="My_Assets.html">My assets</a>
-        <span style="margin: 0 10px;">•</span>
-        <a href="prize-distribution.html">Prize calculator</a>
-        <span style="margin: 0 10px;">•</span>
-        <a href="pyramid.html">Pyramid</a>
-    </p>
-    <p>
-            <figure>
-                <img src="grid_ms.jpg" alt="fib 8 asset grid">
-        </figure>
-    </p>
-    <p>
-        Rules of the game
-    </p>
-    <p>
-        1. Holders can combine <strong>3, 7, 11 or 13</strong> clips together to receive a longer part of the whole as a new NFT from the creator. The parts used for creating a combined video will be burned.
-    </p>
-    <p>
-        2. A combined video can only have supply of one, as it is minted on demand, and if a holder requests a range, say 3, 4 and 5 and it has already been minted by another holder, that range can no longer be combined as an asset. In that case the holder must present a different range, f.ex. 2,3,4 or 4,5,6.<br>
-    <p>    
-        Holders are also completely free to burn any assets from the collection, as they are minted on a permissionless protocol, without freeze or clawback properties.
-    </p>
-        3. Every combination performed gives a share of the prize pool. Larger ranges - larger prize. Contents of the prize pool are in the nfd vault of midsomar.algo and can be examined <a href="https://www.asastats.com/6YR3SVIB3HS5PRMQZTTN7VOAB3BLSCZLLHIYA37G2AS3WNIFB7GPOJ3KQU" target="_blank">here.</a> 
-    </p>
-    <p>
-        Eventually, only one whole film can be made, since the last part of the whole exists in edition of one. The other pieces, combined or in their original form can become unique as well, depending on how many will be burned and their original supply.
-    </p>
-    <p>
-        There are 77 NFTs, indexed from nr.0 to nr.76, where nr.0 is in 77 editions (supply), nr.1 has 76 supply 
-        and so on until last NFT nr.76 with supply of one. 
-        Total supply is 3003, which is a palindrome and a pn4 number with factors of 3x7x11x13.
-    </p>
-    <p>
-        The clips were semi-randomly filmed during the progression of the bonfire with duration of about 10 +-3 seconds. 
-        During editing they were shortened in duration to the first lowest factor (3, 7, 11 and 13 seconds). 
-        So that a clip with duration 9 seconds was shortened to 7 seconds, and a clip with duration 14 seconds was shortened to 13 seconds.
-        
-    </p>
-    <p>
-        So there are:<br>
-        5 clips à 13 seconds<br>
-        31 clips à 11 seconds<br>
-        17 clips à 7 seconds<br>
-        24 clips à 3 seconds<br>
-    </p>
-        <figure>
-            <img src="duration_in_seconds.svg" alt="Duration in seconds chart">
-        </figure>
-    <p>
-        MIDSOMAR.PN4 is an experimental recursive video art project. The series are inspired by mathematics and 
-        shows a Midsommar (Summer solstice) bonfire from the beginning to the end in small video clips and still images.
-        The footage was done by me in 2024 while in company of fellow artists. Some of the clips shows transcription of audible conversations 
-        as they happened during filming. For aesthetic and privacy reasons audio is omitted from the final edits.
-    </p>
-    <p>
-        Combining naturally occurring pseudo-randomness,(as I had no specific plan at the moment of filming or had any control of the flow of conversation) 
-        with a game of numbers inspired by prime numbers, recursion, palindromes and cryptology,
-        I intend to shuffle the <strong>3003</strong> NFTs at <strong>1 Algo</strong> each.
-    </p>
-    <p>
-        <figure>
-            <img src="40.png" alt="Still image 40_midsommar.mp4">
-        </figure>
-    </p>
-    <p>
-        The project is done by Hampelman on Algorand blockchain.<br>
-        <a href="https://x.com/hampelman_nft">Twitter</a>
-    </p>
+    <div class="floating-title">
+        <h1>MIDSOMAR</h1>
+        <h2>PN 4</h2>
     </div>
-    <div style="margin-bottom: 250px;"></div>
+    <div id="pyramid"></div>
+
+    <script>
+        function generatePyramid(totalItems) {
+            // First, let's get the burned assets data from localStorage
+            const trackerState = JSON.parse(localStorage.getItem('trackerState'));
+            const burnedAssets = [];
+            
+            if (trackerState && trackerState.assets) {
+                const assets = new Map(trackerState.assets);
+                
+                // Loop through assets to check burned assets only
+                assets.forEach((asset, id) => {
+                    // Only check the burnedSupply column
+                    if (asset.burnedSupply > 0) {
+                        burnedAssets.push([parseInt(id), asset.burnedSupply]);
+                        console.log(`Asset ${id} has ${asset.burnedSupply} burned`);
+                    }
+                });
+            }
+
+            // Debug log to check burned assets
+            console.log('Burned assets:', burnedAssets);
+
+            const pyramid = [];
+            let itemsUsed = 0;
+            let currentNumber = 76;
+
+            // Create a map of burned assets with their counts
+            const burnedMap = new Map();
+            burnedAssets.forEach(([assetNum, count]) => {
+                burnedMap.set(assetNum, count);
+            });
+
+            // Debug log to check burned map
+            console.log('Burned map:', Array.from(burnedMap.entries()));
+
+            while (itemsUsed < totalItems && currentNumber >= 0) {
+                const rowLength = 77 - currentNumber;
+                let rowNumbers = Array(rowLength).fill(currentNumber);
+                
+                // If this asset has been burned, replace exact number of positions with '  '
+                const burnedCount = burnedMap.get(currentNumber) || 0;
+                if (burnedCount > 0) {
+                    const actualBurnCount = Math.min(burnedCount, rowLength);
+                    const positions = Array.from({length: rowLength}, (_, i) => i)
+                        .sort(() => Math.random() - 0.5)
+                        .slice(0, actualBurnCount);
+                    
+                    positions.forEach(pos => {
+                        rowNumbers[pos] = '  ';
+                    });
+                }
+
+                // Format the numbers
+                rowNumbers = rowNumbers.map(n => n === '  ' ? n : n.toString().padStart(2, '0'));
+                
+                pyramid.push(rowNumbers);
+                itemsUsed += rowLength;
+                currentNumber--;
+            }
+
+            return pyramid;
+        }
+
+        function renderPyramid(pyramid) {
+            const pyramidElement = document.getElementById('pyramid');
+            pyramidElement.innerHTML = '';
+            
+            // Define base flame colors from bottom to top
+            const flameColors = [
+                ['#ff0000', '#ff1111', '#ff2222'],      // Red variations (base)
+                ['#ff4500', '#ff3300', '#ff2200'],      // Red-orange variations
+                ['#ffa500', '#ff9834', '#ff8b17'],      // Orange variations
+                ['#ffd700', '#ffed4a', '#fff44f'],      // Gold variations
+                ['#ffffd0', '#fff7e6', '#fffff0']       // Very light yellow/white variations (tip)
+            ];
+            
+            const totalRows = pyramid.length;
+            
+            pyramid.forEach((row, rowIndex) => {
+                const rowElement = document.createElement('div');
+                
+                // Calculate color zone from bottom to top
+                const zoneIndex = Math.floor(((totalRows - rowIndex - 1) / totalRows) * flameColors.length);
+                
+                rowElement.innerHTML = row.map(item => {
+                    if (item === '  ') {
+                        return '<span style="color: #666; opacity: 0.5;">..</span>';
+                    } else {
+                        const colorSet = flameColors[zoneIndex];
+                        const randomColor = colorSet[Math.floor(Math.random() * colorSet.length)];
+                        
+                        if (Math.random() < 0.2 && zoneIndex < flameColors.length - 1) {
+                            const upperColorSet = flameColors[zoneIndex + 1];
+                            const blendColor = upperColorSet[Math.floor(Math.random() * upperColorSet.length)];
+                            return `<span style="color: ${blendColor};">${item}</span>`;
+                        }
+                        
+                        return `<span style="color: ${randomColor};">${item}</span>`;
+                    }
+                }).join(' ');
+                
+                pyramidElement.appendChild(rowElement);
+            });
+        }
+
+        // Example usage:
+        const burnedAssets = [
+            [4, 6],  // 6 of asset 04 are burned
+            [2, 3],  // 3 of asset 02 are burned
+            // Add more burned assets as needed
+        ];
+
+        const pyramid = generatePyramid(3003, burnedAssets);
+        renderPyramid(pyramid);
+    </script>
+    <div class="nav-links">
+        <a href="about.html">About</a>
+        <span>•</span>
+        <a href="tracker.html">Asset manager</a>
+        <span>•</span>
+        <a href="My_Assets.html">My Assets</a>
+        <span>•</span>
+        <a href="prize-distribution.html">Prize calculator</a>
+    </div>
 </body>
 </html>
