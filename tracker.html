@@ -129,7 +129,7 @@
         }
 
         table th:nth-child(1) { width: 20%; }  /* Name */
-        table th:nth-child(2) { width: 15%; }  /* My Assets */
+        table th:nth-child(2) { width: 15%; }  /* Your Assets */
         table th:nth-child(3) { width: 15%; }  /* Minted */
         table th:nth-child(4) { width: 15%; }  /* Circ. */
         table th:nth-child(5) { width: 15%; }  /* Burned */
@@ -142,7 +142,7 @@
         }
 
         .my-assets {
-            color: #ffa500;  /* Orange color for My Assets */
+            color: #ffa500;  /* Orange color for Your Assets */
         }
         
         .total-row {
@@ -211,24 +211,6 @@
 
         /* Mobile optimization */
         @media screen and (max-width: 768px) {
-            .nav-links {
-                margin: 5px 0;  /* Even tighter on mobile */
-            }
-            
-            .nav-links a {
-                margin: 0 3px;
-                font-size: 12px;  /* Even smaller on mobile */
-            }
-            
-            .nav-links span {
-                margin: 0 1px;
-                font-size: 10px;
-            }
-        }
-
-        /* Mobile optimizations */
-        @media screen and (max-width: 768px) {
-            /* Make table scrollable horizontally */
             .container {
                 padding: 10px;
                 padding-bottom: 100px;
@@ -238,61 +220,25 @@
                 display: block;
                 overflow-x: auto;
                 white-space: nowrap;
-                font-size: 12px;  /* Slightly smaller font */
+                font-size: 12px;
             }
 
-            /* Hide less important columns */
-            th:nth-child(3),  /* Initial Supply */
-            td:nth-child(3),
-            th:nth-child(6),  /* Creation Time */
-            td:nth-child(6) {
-                display: none;
-            }
-
-            /* Stack input controls vertically */
             .input-controls {
                 flex-direction: column;
-                gap: 10px;
+                gap: 5px;
             }
 
-            .input-group {
-                width: 100%;
-                justify-content: space-between;
-                margin: 0 8px;  /* Add margin on sides */
-            }
-
+            /* Input section adjustments */
             .input-section {
                 padding: 8px;
                 bottom: 2px;
-                gap: 1px;
-            }
-
-            .input-section input {
-                height: 32px;
-                padding: 4px 8px;
-                font-size: 14px;
-            }
-
-            .input-section button {
-                height: 32px;
-                padding: 4px 8px;
-                font-size: 14px;
-            }
-
-            .input-controls {
-                gap: 5px;
             }
 
             .input-group {
                 gap: 4px;
             }
 
-            /* Adjust table to give more space */
-            .container {
-                padding-bottom: 120px;
-            }
-
-            /* Adjust rules section for better readability */
+            /* Rules section adjustments */
             .rules {
                 font-size: 13px;
                 padding: 15px;
@@ -416,11 +362,6 @@
             border: 1px solid #a7ffea;
         }
 
-        /* Remove padding from asset table */
-        #assetTable {
-            /* removed padding-top */
-        }
-
         .particle-container {
             pointer-events: none;
             z-index: 1001;
@@ -449,19 +390,62 @@
                 opacity: 0; 
             }
         }
+
+        #assetTable .total-row {
+            position: sticky;
+            bottom: 80px;
+            background-color: #333;
+            font-weight: bold;
+            z-index: 999;
+        }
+
+        #assetTable .total-row td {
+            border-top: 2px solid #a7ffea !important;
+        }
+
+        /* Total row styling for both tables */
+        #combinedAssetsTable .total-row {
+            position: sticky;
+            bottom: 0;
+            background-color: #333;
+            font-weight: bold;
+            z-index: 999;
+        }
+
+        #assetTable .total-row {
+            position: sticky;
+            bottom: 80px;  /* Space for input section */
+            background-color: #333;
+            font-weight: bold;
+            z-index: 999;
+        }
+
+        /* Mobile adjustments for total rows */
+        @media screen and (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                font-size: 12px;
+            }
+
+            #combinedAssetsTable .total-row,
+            #assetTable .total-row {
+                position: relative;  /* Change to relative in mobile */
+                bottom: auto;       /* Remove bottom positioning */
+                border-top: 2px solid #a7ffea;  /* Add visible separator */
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="rules">
             <p>
-                Welcome to your asset manager!
                 <ul>
-                    <li>The "Simulate Shuffle" button randomly distributes assets</li>
-                    <li>Base assets (MS 00-76) must be combined in sequential groups of 1, 3, 7, 11, or 13.</li>
-                    <li>To combine click on first name and last to create a range, or input manually.</li>
-                    <li>Assets used to combine are burned and create a new asset populated in the top table</li>
-                    <li>To burn assets click on My Assets column in the cell of the asset or input manually then input amount.</li>
+                    <li>Shuffle your assets</li>
+                    <li>To win prizes tap asset names in sequential groups of 1, 3, 7, 11, or 13 and Combine</li>
+                    <li>Burn assets by tapping at Your Assets column, input amount and Burn</li>
                     <li>Orange rows indicate assets you currently own</li>
                     <li>Columns are sortable</li>
                     <li>NOTE: Combining combined assets is not possible atm</li>
@@ -471,7 +455,7 @@
                     <span>•</span>
                     <a href="about.html">About</a>
                     <span>•</span>
-                    <a href="My_Assets.html">My assets</a>
+                    <a href="Your-assets.html">Your assets</a>
                     <span>•</span>
                     <a href="prize-distribution.html">Prize calculator</a>
                 </p>
@@ -484,7 +468,7 @@
                 <tr>
                     <th data-sort="name">Name</th>
                     <th data-sort="factor">Factor</th>
-                    <th data-sort="myAssets">My Assets</th>
+                    <th data-sort="prize">Prize</th>
                     <th data-sort="circulatingSupply">Circ.</th>
                     <th data-sort="burnedSupply">Burned</th>
                     <th data-sort="creationTime">Created</th>
@@ -499,7 +483,7 @@
             <thead>
                 <tr>
                     <th data-sort="name">Name</th>
-                    <th data-sort="myAssets">My Assets</th>
+                    <th data-sort="myAssets">Your Assets</th>
                     <th data-sort="initialSupply">Minted</th>
                     <th data-sort="circulatingSupply">Circ.</th>
                     <th data-sort="burnedSupply">Burned</th>
@@ -530,9 +514,12 @@
     </div>
 
     <script>
+        // Add this constant at the top of your script
+        const VAULT_VALUE = 240; // Same value as in prize-distribution.html
+
         // Add this with other global variables
         const overlayHandlers = new Map();
-
+        
         // Define global function first
         window.shuffleAssets = function() {
             if (window.tracker) {
@@ -853,8 +840,13 @@
                         const nameCell = row.insertCell(0);
                         nameCell.textContent = asset.name;
                         
-                        row.insertCell(1).textContent = asset.factor || '';  // Factor moved next to Name
-                        row.insertCell(2).textContent = myAssetAmount;
+                        row.insertCell(1).textContent = asset.factor || '';
+                        
+                        // Calculate prize based on factor
+                        const factor = parseInt(asset.factor) || 0;
+                        const prize = (factor / 278) * VAULT_VALUE;
+                        row.insertCell(2).textContent = prize > 0 ? `${prize.toFixed(2)} Algo` : '';
+                        
                         row.insertCell(3).textContent = asset.circulatingSupply;
                         row.insertCell(4).textContent = asset.burnedSupply;
                         row.insertCell(5).textContent = this.formatDateTime(asset.creationTime);
@@ -876,6 +868,96 @@
                         assetTbody.appendChild(row);
                     }
                 });
+
+                if (combinedTbody) {
+                    // Create totals row
+                    const totalRow = document.createElement('tr');
+                    totalRow.classList.add('total-row');
+                    
+                    // Name column - just shows "Total"
+                    const nameCell = totalRow.insertCell(0);
+                    nameCell.textContent = 'Total';
+                    
+                    // Calculate totals
+                    const totals = Array.from(this.assets.values())
+                        .filter(asset => asset.range) // Only combined assets
+                        .reduce((acc, asset) => {
+                            acc.factor += parseInt(asset.factor) || 0;
+                            acc.prize += ((parseInt(asset.factor) || 0) / 278) * VAULT_VALUE;
+                            acc.circ += asset.circulatingSupply;
+                            acc.burned += asset.burnedSupply;
+                            return acc;
+                        }, { factor: 0, prize: 0, circ: 0, burned: 0 });
+                    
+                    // Factor total
+                    totalRow.insertCell(1).textContent = totals.factor;
+                    
+                    // Prize total
+                    totalRow.insertCell(2).textContent = `${totals.prize.toFixed(2)} Algo`;
+                    
+                    // Circulating supply total
+                    totalRow.insertCell(3).textContent = totals.circ;
+                    
+                    // Burned total
+                    totalRow.insertCell(4).textContent = totals.burned;
+                    
+                    // Time column - calculate time span
+                    const times = Array.from(this.assets.values())
+                        .filter(asset => asset.range)
+                        .map(asset => new Date(asset.creationTime));
+                    
+                    const timeSpan = times.length > 0 ? 
+                        this.formatTimeSpan(Math.min(...times), Math.max(...times)) :
+                        '';
+                    totalRow.insertCell(5).textContent = timeSpan;
+                    
+                    combinedTbody.appendChild(totalRow);
+                }
+
+                if (assetTbody) {
+                    // Create totals row for main table
+                    const mainTotalRow = document.createElement('tr');
+                    mainTotalRow.classList.add('total-row');
+                    
+                    // Name column - shows "Total"
+                    const nameCell = mainTotalRow.insertCell(0);
+                    nameCell.textContent = 'Total';
+                    
+                    // Calculate totals for main table (non-combined assets)
+                    const mainTotals = Array.from(this.assets.entries())
+                        .filter(([id, asset]) => !asset.range) // Only non-combined assets
+                        .reduce((acc, [id, asset]) => {  // Destructure both id and asset
+                            acc.myAssets += this.myAssets.get(id) || 0;  // Use the correct id to get myAssets
+                            acc.initial += asset.initialSupply || 0;
+                            acc.circ += asset.circulatingSupply;
+                            acc.burned += asset.burnedSupply;
+                            return acc;
+                        }, { myAssets: 0, initial: 0, circ: 0, burned: 0 });
+                    
+                    // Your Assets total
+                    mainTotalRow.insertCell(1).textContent = mainTotals.myAssets;
+                    
+                    // Initial Supply total
+                    mainTotalRow.insertCell(2).textContent = mainTotals.initial;
+                    
+                    // Circulating supply total
+                    mainTotalRow.insertCell(3).textContent = mainTotals.circ;
+                    
+                    // Burned total
+                    mainTotalRow.insertCell(4).textContent = mainTotals.burned;
+                    
+                    // Time column - calculate time span
+                    const times = Array.from(this.assets.values())
+                        .filter(asset => !asset.range)
+                        .map(asset => new Date(asset.creationTime));
+                    
+                    const timeSpan = times.length > 0 ? 
+                        this.formatTimeSpan(Math.min(...times), Math.max(...times)) :
+                        '';
+                    mainTotalRow.insertCell(5).textContent = timeSpan;
+                    
+                    assetTbody.appendChild(mainTotalRow);
+                }
             }
 
             saveState() {
@@ -1133,6 +1215,23 @@
                 
                 // Save state
                 this.saveState();
+            }
+
+            formatTimeSpan(startDate, endDate) {
+                if (!startDate || !endDate) return '';
+                
+                const diff = endDate - startDate;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                
+                if (days > 0) {
+                    return `${days}d ${hours}h`;
+                } else if (hours > 0) {
+                    return `${hours}h ${minutes}m`;
+                } else {
+                    return `${minutes}m`;
+                }
             }
         }
 
@@ -1463,7 +1562,7 @@
         // Add this after where overlayHandlers is defined
         document.addEventListener('click', (e) => {
             const cell = e.target.closest('td');
-            if (cell && cell.cellIndex === 1) {  // Check if it's a "My Assets" column cell
+            if (cell && cell.cellIndex === 1) {  // Check if it's a "Your Assets" column cell
                 const assetName = cell.closest('tr').querySelector('td').textContent;  // Get "MS XX"
                 const assetNumber = assetName.replace('MS ', '');  // Remove "MS " to get just the number
                 document.getElementById('burnAsset').value = assetNumber;

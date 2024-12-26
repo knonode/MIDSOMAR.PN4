@@ -6,62 +6,334 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14'>☀️</text></svg>">
     <title>MIDSOMAR.PN4</title>
     <style>
+        /* Any @import rules must come first */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
         body {
-            display: flex;
-            justify-content: center;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             font-family: 'Maven Pro', monospace;
             background-color: #262626;
             color: #eee;
-            transition: background-color 0.3s, color 0.3s;
         }
-        h1 {
-            color: #a7ffea; /* {{ edit_9 }} Title color */
+
+        .header {
+            background-color: #1a1a1a;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 999;
         }
-        a {
-            color: #a7ffea; /* {{ edit_10 }} Link color */
-            text-decoration: none; /* {{ edit_11 }} Remove underline from links */
+
+        .menu-button {
+            background: none;
+            border: none;
+            color: #a7ffea;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            display: none;
         }
-        a:hover {
-            text-decoration: underline; /* {{ edit_12 }} Underline on hover */
+
+        @media (min-width: 769px) {
+            .menu-button {
+                display: block;
+            }
         }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #1a1a1a;
+            padding: 10px 0;
+            border-top: 1px solid #333;
+        }
+
+        .mobile-nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 12px;
+        }
+
+        .nav-item.active {
+            color: #a7ffea;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-nav {
+                display: block;
+            }
+            .menu-button {
+                display: none;
+            }
+        }
+
         .container {
             max-width: 800px;
-            width: 100%;
+            margin: 80px auto 100px;
+            padding: 20px;
         }
+
         h1 {
+            color: #a7ffea;
             text-align: center;
+            margin-bottom: 30px;
         }
+
         img {
             width: 100%;
             height: auto;
             display: block;
+            margin: 20px 0;
+            border-radius: 8px;
         }
+
+        p {
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+
+        strong {
+            color: #a7ffea;
+        }
+
+        a {
+            color: #a7ffea;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
         figure {
-            margin: 0;
+            margin: 20px 0;
         }
+
         figcaption {
             text-align: center;
             margin-top: 10px;
+            color: #888;
+        }
+
+        /* Add Font Awesome for icons */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+        .desktop-menu {
+            position: fixed;
+            left: -370px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background-color: #1a1a1a;
+            transition: left 0.3s ease;
+            z-index: 1001;
+            padding: 20px;
+            box-shadow: none;
+        }
+
+        .desktop-menu.active {
+            left: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .desktop-menu .close-button {
+            position: absolute;
+            right: -40px;
+            top: 16px;
+            background: none;
+            border: none;
+            color: #a7ffea;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .desktop-menu .nav-items {
+            margin-top: 60px;
+        }
+
+        .desktop-menu .nav-item {
+            padding: 15px 0;
+            font-size: 16px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 1px solid #333;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #a7ffea;
+            width: 20%;
+            min-height: 50px;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+            min-height: 20px;
+            display: inline-block;
+        }
+
+        .nav-item span {
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Hide mobile menu on larger screens */
+        @media (min-width: 768px) {
+            .mobile-menu {
+                display: none;
+            }
+        }
+
+        /* Add padding to main content to prevent overlap with mobile menu */
+        main {
+            padding-bottom: 70px;
+        }
+
+        /* Debug outlines */
+        .mobile-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 1px solid #333; /* Visual indicator */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #a7ffea;
+            width: 20%;
+            min-height: 50px; /* Ensure minimum clickable area */
+            padding: 5px;
+            outline: 1px solid transparent; /* Debug outline on hover */
+        }
+
+        .nav-item:hover {
+            outline-color: rgba(167, 255, 234, 0.2); /* Show boundary on hover */
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+            min-height: 20px; /* Ensure space even if icon fails */
+        }
+
+        .nav-item span {
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Error state */
+        .nav-item.error {
+            color: #ff4444;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" 
+          integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" />
 </head>
 <body>
+    <header class="header">
+        <!-- <a href="#" class="logo">MIDSOMAR.PN4</a> -->
+        <button class="menu-button">☰</button>
+    </header>
+
+    <div class="overlay"></div>
+    <nav class="desktop-menu">
+        <button class="close-button">×</button>
+        <div class="nav-items">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-mountain"></i>
+                <span>Pyramid</span>
+            </a>
+            <a href="tracker.html" class="nav-item">
+                <i class="fas fa-sliders-h"></i>
+                <span>Manager</span>
+            </a>
+            <a href="Your-assets.html" class="nav-item">
+                <i class="fas fa-images"></i>
+                <span>Assets</span>
+            </a>
+            <a href="prize-distribution.html" class="nav-item">
+                <i class="fas fa-trophy"></i>
+                <span>Prize</span>
+            </a>
+            <a href="manage.html" class="nav-item">
+                <i class="fas fa-wallet"></i>
+                <span>Wallet</span>
+            </a>
+        </div>
+    </nav>
+
     <div class="container">
-    <h1>MIDSOMAR.PN4</h1>
-    <div class="nav-links">
-        <a href="index.html">Pyramid</a>
-        <span>•</span>
-        <a href="tracker.html">Asset manager</a>
-        <span>•</span>
-        <a href="My_Assets.html">My Assets</a>
-        <span>•</span>
-        <a href="prize-distribution.html">Prize calculator</a>
-    </div>
-    <p>
+        <!-- Your existing content here -->
+        <h1>MIDSOMAR.PN4</h1>
+        <!-- Rest of your content... -->
+        <p>
             <figure>
-                <img src="grid_ms.jpg" alt="fib 8 asset grid">
+                <img src="pyramid_78_1.png" alt="fib 8 asset grid">
         </figure>
     </p>
     <p>
@@ -122,6 +394,90 @@
         <a href="https://x.com/hampelman_nft">Twitter</a>
     </p>
     </div>
-    <div style="margin-bottom: 250px;"></div>
+
+    <nav class="mobile-menu">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-mountain"></i>
+            <span>Pyramid</span>
+        </a>
+        <a href="tracker.html" class="nav-item">
+            <i class="fas fa-sliders-h"></i>
+            <span>Manager</span>
+        </a>
+        <a href="Your-assets.html" class="nav-item">
+            <i class="fas fa-images"></i>
+            <span>Assets</span>
+        </a>
+        <a href="prize-distribution.html" class="nav-item">
+            <i class="fas fa-trophy"></i>
+            <span>Prize</span>
+        </a>
+        <a href="manage.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </a>
+    </nav>
+
+    <script>
+        const menuButton = document.querySelector('.menu-button');
+        const closeButton = document.querySelector('.close-button');
+        const desktopMenu = document.querySelector('.desktop-menu');
+        const overlay = document.querySelector('.overlay');
+
+        function toggleMenu() {
+            desktopMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        menuButton.addEventListener('click', toggleMenu);
+        closeButton.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+    </script>
+
+    <!-- First, let's verify Font Awesome is loaded -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verify Font Awesome loaded
+            const checkFontAwesome = setInterval(function() {
+                const testIcon = document.createElement('i');
+                testIcon.className = 'fas fa-pyramid';
+                document.body.appendChild(testIcon);
+                
+                const isLoaded = window.getComputedStyle(testIcon).fontFamily.includes('Font Awesome');
+                document.body.removeChild(testIcon);
+                
+                if (isLoaded) {
+                    console.log('Font Awesome loaded successfully');
+                    clearInterval(checkFontAwesome);
+                } else {
+                    console.warn('Waiting for Font Awesome to load...');
+                }
+            }, 100);
+
+            // Stop checking after 5 seconds to prevent infinite loop
+            setTimeout(() => {
+                clearInterval(checkFontAwesome);
+                if (!document.querySelector('.fas')) {
+                    console.error('Font Awesome failed to load after 5 seconds');
+                }
+            }, 5000);
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add a small delay to ensure Font Awesome has time to initialize
+            setTimeout(() => {
+                const icons = document.querySelectorAll('.nav-item i');
+                icons.forEach(icon => {
+                    if (icon.offsetWidth === 0) {
+                        console.error('Icon not rendering:', icon.className);
+                    } else {
+                        console.log('Icon loaded successfully:', icon.className);
+                    }
+                });
+            }, 500);
+        });
+    </script>
 </body>
 </html>
