@@ -46,22 +46,6 @@
             }
         }
 
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #1a1a1a;
-            padding: 10px 0;
-            border-top: 1px solid #333;
-        }
-
-        .mobile-nav-items {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
         .nav-item {
             display: flex;
             flex-direction: column;
@@ -81,8 +65,8 @@
         }
 
         @media (max-width: 768px) {
-            .mobile-nav {
-                display: block;
+            .mobile-menu {
+                display: flex;
             }
             .menu-button {
                 display: none;
@@ -198,16 +182,25 @@
             display: block;
         }
 
+        /* First, define the base mobile-menu style */
         .mobile-menu {
+            display: none;  /* Hide by default */
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             background: #1a1a1a;
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
             border-top: 1px solid #333;
+            z-index: 1000;
+        }
+
+        /* Then only show it on mobile screens */
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: flex;
+                justify-content: space-around;
+                padding: 8px 0;
+            }
         }
 
         .nav-item {
@@ -243,19 +236,7 @@
         main {
             padding-bottom: 70px;
         }
-
-        /* Debug outlines */
-        .mobile-menu {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #1a1a1a;
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            border-top: 1px solid #333; /* Visual indicator */
-        }
+        
 
         .nav-item {
             display: flex;
@@ -461,22 +442,6 @@
                     console.error('Font Awesome failed to load after 5 seconds');
                 }
             }, 5000);
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add a small delay to ensure Font Awesome has time to initialize
-            setTimeout(() => {
-                const icons = document.querySelectorAll('.nav-item i');
-                icons.forEach(icon => {
-                    if (icon.offsetWidth === 0) {
-                        console.error('Icon not rendering:', icon.className);
-                    } else {
-                        console.log('Icon loaded successfully:', icon.className);
-                    }
-                });
-            }, 500);
         });
     </script>
 </body>
